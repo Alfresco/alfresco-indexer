@@ -81,3 +81,10 @@ Repository
     </repository>
 
 ```
+
+Credits
+---
+This project was have been developed by 
+* Alfresco Consultant [Maurizio Pillitu](http://session.it)
+* [Findwise](http://www.findwise.com/) ([Martin Nycander](https://github.com/Nycander) and [Andreas Salomonsson](https://github.com/andreassalomonsson))
+* [Zaizi](http://www.zaizi.com) ([Rafa Haro](https://github.com/rafaharo) and [Ivan Arroyo](https://github.com/iarroyo)) 
