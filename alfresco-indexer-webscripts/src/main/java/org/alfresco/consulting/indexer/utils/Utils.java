@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.manifoldcf.integration.alfresco.indexer.utils;
+package org.alfresco.consulting.indexer.utils;
 
 import java.util.Iterator;
 

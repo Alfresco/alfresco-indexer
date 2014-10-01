@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.manifoldcf.integration.alfresco.indexer.webscripts;
+package org.alfresco.consulting.indexer.webscripts;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -25,6 +25,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.alfresco.consulting.indexer.dao.IndexingDaoImpl;
+import org.alfresco.consulting.indexer.entities.NodeEntity;
 import org.alfresco.error.AlfrescoRuntimeException;
 import org.alfresco.repo.domain.node.NodeDAO;
 import org.alfresco.repo.domain.qname.QNameDAO;
@@ -33,8 +35,6 @@ import org.alfresco.service.namespace.NamespaceService;
 import org.alfresco.util.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.manifoldcf.integration.alfresco.indexer.dao.IndexingDaoImpl;
-import org.apache.manifoldcf.integration.alfresco.indexer.entities.NodeEntity;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import org.springframework.extensions.webscripts.Cache;

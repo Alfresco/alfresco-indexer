@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.manifoldcf.integration.alfresco.indexer.dao;
+package org.alfresco.consulting.indexer.dao;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -23,6 +23,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.alfresco.consulting.indexer.entities.NodeBatchLoadEntity;
+import org.alfresco.consulting.indexer.entities.NodeEntity;
+import org.alfresco.consulting.indexer.utils.Utils;
 import org.alfresco.service.ServiceRegistry;
 import org.alfresco.service.cmr.repository.NodeRef;
 import org.alfresco.service.cmr.repository.NodeService;
@@ -34,9 +37,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.ibatis.session.RowBounds;
-import org.apache.manifoldcf.integration.alfresco.indexer.entities.NodeBatchLoadEntity;
-import org.apache.manifoldcf.integration.alfresco.indexer.entities.NodeEntity;
-import org.apache.manifoldcf.integration.alfresco.indexer.utils.Utils;
 import org.mybatis.spring.SqlSessionTemplate;
 
 public class IndexingDaoImpl

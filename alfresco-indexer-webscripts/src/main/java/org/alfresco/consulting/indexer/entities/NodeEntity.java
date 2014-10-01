@@ -14,9 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.manifoldcf.integration.alfresco.indexer.entities;
-
-import org.apache.manifoldcf.integration.alfresco.indexer.entities.NodeEntity;
+package org.alfresco.consulting.indexer.entities;
 
 @SuppressWarnings("serial")
 public class NodeEntity extends org.alfresco.repo.domain.node.NodeEntity {
