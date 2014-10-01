@@ -27,7 +27,7 @@
   </bean>
 
   <bean id="indexingService"
-        class="org.apache.manifoldcf.integration.alfresco.indexer.dao.IndexingDaoImpl">
+        class="org.alfresco.consulting.indexer.dao.IndexingDaoImpl">
     <property name="sqlSessionTemplate" ref="indexingSqlSessionTemplate"/>
     <property name="serviceRegistry" ref="ServiceRegistry" />
     <property name="allowedTypes">
@@ -63,7 +63,7 @@
   </bean>
 
   <bean id="webscript.org.alfresco.consulting.indexer.changes.get"
-        class="org.apache.manifoldcf.integration.alfresco.indexer.webscripts.NodeChangesWebScript"
+        class="org.alfresco.consulting.indexer.webscripts.NodeChangesWebScript"
         parent="webscript">
     <property name="namespaceService" ref="NamespaceService"/>
     <property name="qnameDao" ref="qnameDAO"/>
@@ -75,7 +75,7 @@
   </bean>
   
   <bean id="webscript.org.alfresco.consulting.indexer.actions.get"
-        class="org.apache.manifoldcf.integration.alfresco.indexer.webscripts.NodeActionsWebScript"
+        class="org.alfresco.consulting.indexer.webscripts.NodeActionsWebScript"
         parent="webscript">
     <property name="namespaceService" ref="NamespaceService"/>
     <property name="qnameDao" ref="qnameDAO"/>
@@ -85,7 +85,7 @@
   </bean>
 
   <bean id="webscript.org.alfresco.consulting.indexer.details.get"
-        class="org.apache.manifoldcf.integration.alfresco.indexer.webscripts.NodeDetailsWebScript"
+        class="org.alfresco.consulting.indexer.webscripts.NodeDetailsWebScript"
         parent="webscript">
     <property name="dictionaryService" ref="DictionaryService"/>
     <property name="namespaceService" ref="NamespaceService"/>
@@ -99,7 +99,7 @@
   </bean>
 
   <bean id="webscript.org.alfresco.consulting.indexer.authresolve.get"
-        class="org.apache.manifoldcf.integration.alfresco.indexer.webscripts.AuthorityResolverWebScript"
+        class="org.alfresco.consulting.indexer.webscripts.AuthorityResolverWebScript"
         parent="webscript">
     <property name="authorityService" ref="AuthorityService"/>
     <property name="personService" ref="PersonService"/>
