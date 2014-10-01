@@ -1,0 +1,8 @@
+<webscript>
+  <shortname>Authority Resolve</shortname>
+  <description>Renders out all authorities related with the given user(name)</description>
+  <url>/auth/resolve/{username}</url>
+  <authentication runas="admin">none</authentication>
+  <format default="json">argument</format>
+  <family>Custom Indexer</family>
+</webscript>

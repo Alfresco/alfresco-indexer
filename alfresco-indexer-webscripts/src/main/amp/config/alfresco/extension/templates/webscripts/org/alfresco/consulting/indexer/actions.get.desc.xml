@@ -1,0 +1,8 @@
+<webscript>
+  <shortname>Node Actions</shortname>
+  <description>Node Actions</description>
+  <url>/node/actions/{storeProtocol}/{storeId}/{uuid}</url>
+  <authentication>user</authentication>
+  <format default="json">argument</format>
+  <family>Custom Indexer</family>
+</webscript>

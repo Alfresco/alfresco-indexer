@@ -1,0 +1,8 @@
+<webscript>
+  <shortname>Node Changes</shortname>
+  <description>Node Changes</description>
+  <url>/node/changes/{storeProtocol}/{storeId}?lastTxnId={lastTxnId?}&amp;lastAclChangesetId=${lastAclChangesetId}&amp;maxTxns=${maxTxns?}&amp;maxAclChangesets=${maxAclChangesets?}</url>
+  <authentication runas="admin">none</authentication>
+  <format default="json">argument</format>
+  <family>Custom Indexer</family>
+</webscript>

@@ -1,0 +1,8 @@
+<webscript>
+  <shortname>Node Details</shortname>
+  <description>Node Details, including list of authorities with READ access on the node</description>
+  <url>/node/details/{storeProtocol}/{storeId}/{uuid}</url>
+  <authentication runas="admin">none</authentication>
+  <format default="json">argument</format>
+  <family>Custom Indexer</family>
+</webscript>

@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE beans PUBLIC '-//SPRING//DTD BEAN//EN' 'http://www.springframework.org/dtd/spring-beans.dtd'>
+
+<beans>
+	<bean id="indexingServiceMBean" class="org.apache.manifoldcf.integration.alfresco.indexer.dao.IndexingDaoJMX">
+		<property name="indexingDaoImpl" ref="indexingService" />
+	</bean>
+
+	<bean id="indexingServiceJmxExporter" class="org.springframework.jmx.export.MBeanExporter">
+		<property name="assembler" ref="assembler" />
+		<property name="beans">
+			<map>
+				<entry key="Alfresco:Name=Indexing,Type=indexingService" value-ref="indexingServiceMBean" />
+			</map>
+		</property>
+	</bean>
+
+	<bean id="jmxAttributeSource" class="org.springframework.jmx.export.annotation.AnnotationJmxAttributeSource" />
+
+	<bean id="assembler" class="org.springframework.jmx.export.assembler.MetadataMBeanInfoAssembler">
+		<property name="attributeSource" ref="jmxAttributeSource" />
+	</bean>
+</beans>

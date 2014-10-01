@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="alfresco.index">
+  <resultMap id="result_NodeIndex" type="NodeIndex">
+    <id property="id" column="id" jdbcType="BIGINT" javaType="java.lang.Long"/>
+    <result property="uuid" column="uuid" jdbcType="VARCHAR" javaType="java.lang.String"/>
+    <result property="version" column="version" jdbcType="BIGINT" javaType="java.lang.Long"/>
+    <result property="store.id" column="store_id" jdbcType="BIGINT" javaType="java.lang.Long"/>
+    <result property="store.protocol" column="protocol" jdbcType="VARCHAR" javaType="java.lang.String"/>
+    <result property="store.identifier" column="identifier" jdbcType="VARCHAR" javaType="java.lang.String"/>
+    <result property="typeName" column="type_name" jdbcType="VARCHAR" javaType="java.lang.String"/>
+    <result property="typeNamespace" column="type_namespace" jdbcType="VARCHAR" javaType="java.lang.String"/>
+    <result property="aclChangesetId" column="acl_changeset_id" jdbcType="BIGINT" javaType="java.lang.Long"/>
+    <result property="transactionId" column="txn_id" jdbcType="BIGINT" javaType="java.lang.Long"/>
+  </resultMap>
+
+  <select id="select_NodeIndexesByAclChangesetId" parameterType="NodeIndexLoad" resultMap="result_NodeIndex">
+    select 
+    n.id 				as id,
+    n.uuid 				as uuid, 
+    n.version 			as version, 
+    n.store_id 			as store_id, 
+    #{storeProtocol}             as protocol,
+    #{storeIdentifier}           as identifier,
+    q.local_name 		as type_name, 
+    ns.uri 				as type_namespace, 
+    acl.acl_change_set  as acl_changeset_id
+    from 
+    alf_node n
+    
+    left outer join alf_access_control_list acl on n.acl_id = acl.id
+    join alf_qname q on q.id=n.type_qname_id
+	join alf_namespace ns on ns.id=q.ns_id
+	
+	<!-- Filter by node types --> 
+	<if test="allowedTypes != null and allowedTypes.size() > 0">
+		and
+		concat('{', ns.uri, '}', q.local_name) in
+  		<foreach item="type" index="index" collection="allowedTypes" open="(" separator="," close=")">
+ 			#{type}
+   		</foreach>
+	</if>
+	
+	<!-- Filter by mimetypes --> 
+	<if test="mimeTypes != null and mimeTypes.size() > 0">
+		join alf_qname qm on qm.id=n.type_qname_id
+		join alf_node_properties pm on pm.node_id=n.id and pm.qname_id=qm.id
+		join alf_content_data dm on dm.id=pm.long_value
+		join alf_mimetype m on dm.content_mimetype_id = m.id and m.mimetype_str in 
+		<foreach item="mime" index="index" collection="mimeTypes" open="(" separator="," close=")">
+       		#{mime}
+     	</foreach>
+    </if>	
+    
+	where
+	
+	<!-- Filter by aspects --> 
+	<if test="aspects != null and aspects.size() > 0">
+		n.id in
+		(
+			SELECT n.id FROM alf_node n
+			<foreach item="aspect" index="index" collection="aspects" open="" separator="" close="">
+				JOIN alf_node_aspects a${index} ON a${index}.node_id = n.id
+				JOIN alf_qname q${index} ON q${index}.id = a${index}.qname_id 
+				JOIN alf_namespace ns${index} ON ns${index}.id = q${index}.ns_id
+            </foreach>
+			WHERE  
+				<foreach item="aspect" index="index" collection="aspects" open="(" separator=" AND " close=")">
+					('{' || ns${index}.uri || '}' || q${index}.local_name) = #{aspect}
+				</foreach> 
+		) and
+	</if>
+	
+	<!-- Filter by name extension -->
+	<if test="excludedNameExtension != null and excludedNameExtension.size() > 0">
+    	n.id not in
+		(
+			select n.id from alf_node n
+			join alf_node_properties np on np.node_id=n.id
+			join alf_qname qnp on qnp.id=np.qname_id and qnp.local_name='name' 
+			and 
+			<foreach item="extension" index="index" collection="excludedNameExtension" open="(" separator=" OR " close=")">
+				np.string_value like concat('%', #{extension})
+			</foreach>
+		) and
+	</if>
+	
+	n.store_id = #{storeId} and
+    acl.acl_change_set &gt; #{minId} and
+    acl.acl_change_set &lt;= #{maxId}
+	order by n.transaction_id ASC
+  </select>
+
+  <select id="select_NodeIndexesByTransactionId" parameterType="NodeIndexLoad" resultMap="result_NodeIndex">
+    select 
+    n.id 				as id,
+    n.uuid 				as uuid, 
+    n.version 			as version, 
+    n.store_id 			as store_id, 
+    #{storeProtocol}             as protocol,
+    #{storeIdentifier}           as identifier,
+    q.local_name 		as type_name, 
+    ns.uri 				as type_namespace, 
+    n.transaction_id 	as txn_id
+    from 
+    alf_node n
+    
+    join alf_qname q on q.id=n.type_qname_id
+	join alf_namespace ns on ns.id=q.ns_id
+	
+	<!-- Filter by node types --> 
+	<if test="allowedTypes != null and allowedTypes.size() > 0">
+		and
+		concat('{', ns.uri, '}', q.local_name) in
+  		<foreach item="type" index="index" collection="allowedTypes" open="(" separator="," close=")">
+ 			#{type}
+   		</foreach>
+	</if>
+	
+	<!-- Filter by mimetypes --> 
+	<if test="mimeTypes != null and mimeTypes.size() > 0">
+		join alf_qname qm on qm.id=n.type_qname_id
+		join alf_node_properties pm on pm.node_id=n.id and pm.qname_id=qm.id
+		join alf_content_data dm on dm.id=pm.long_value
+		join alf_mimetype m on dm.content_mimetype_id = m.id and m.mimetype_str in 
+		<foreach item="mime" index="index" collection="mimeTypes" open="(" separator="," close=")">
+       		#{mime}
+     	</foreach>
+    </if>
+
+	where
+	
+	<!-- Filter by aspects --> 
+	<if test="aspects != null and aspects.size() > 0">
+		n.id in
+		(
+			SELECT n.id FROM alf_node n
+				<foreach item="aspect" index="index" collection="aspects" open="" separator="" close="">
+					JOIN alf_node_aspects a${index} ON a${index}.node_id = n.id
+					JOIN alf_qname q${index} ON q${index}.id = a${index}.qname_id 
+					JOIN alf_namespace ns${index} ON ns${index}.id = q${index}.ns_id
+            	</foreach>
+			WHERE  
+				<foreach item="aspect" index="index" collection="aspects" open="(" separator=" AND " close=")">
+					('{' || ns${index}.uri || '}' || q${index}.local_name) = #{aspect}
+				</foreach> 
+		) and
+	</if>
+	
+	<!-- Filter by name extension -->
+	<if test="excludedNameExtension != null and excludedNameExtension.size() > 0">
+    	n.id not in
+		(
+			select n.id from alf_node n
+			join alf_node_properties np on np.node_id=n.id
+			join alf_qname qnp on qnp.id=np.qname_id and qnp.local_name='name' 
+			and 
+			<foreach item="extension" index="index" collection="excludedNameExtension" open="(" separator=" OR " close=")">
+				np.string_value like concat('%', #{extension})
+			</foreach>
+		) and
+	</if>
+	
+	n.store_id = #{storeId} and
+	n.transaction_id &gt; #{minId} and
+    n.transaction_id &lt;= #{maxId}
+	order by n.transaction_id ASC
+  </select>
+  
+  <select id="select_NodeIndexesByUuid" parameterType="NodeIndexLoad" resultMap="result_NodeIndex">
+    select
+    node.id             as id,
+    node.uuid           as uuid,
+    node.version        as version,
+    node.store_id       as store_id,
+    #{storeProtocol}             as protocol,
+    #{storeIdentifier}           as identifier,
+    qname.local_name    as type_name,
+    ns.uri              as type_namespace,
+    np.string_value         as node_name,
+    node.transaction_id as txn_id
+    
+    from alf_node node
+    left outer join alf_qname qname on node.type_qname_id = qname.id
+    left outer join alf_namespace ns on qname.ns_id = ns.id
+    
+    join alf_node_properties np on np.node_id=node.id
+    join alf_qname qnp on qnp.id=np.qname_id and qnp.local_name='name'
+    where
+    node.uuid = #{uuid}
+  </select>
+  
+  <select id="select_LastTransactionID" resultType="long">
+	select 
+	id 
+	from alf_transaction 
+	order by id desc 
+	limit 1
+  </select>
+  
+  <select id="select_LastAclChangeSetID" resultType="long">
+	select 
+	id 
+	from alf_acl_change_set
+	order by id desc 
+	limit 1
+  </select>
+  
+</mapper>
