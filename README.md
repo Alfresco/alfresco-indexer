@@ -11,7 +11,7 @@ Alfresco Indexer WebScripts mimics the same behaviour of the built-in Solr API W
 - Pro: Simplified Search Index structure, it improves integration of Alfresco indexing with existing Search engines and index data structures
 - Pro: The authorization checks are implemented by query parsers by adding security constraints to a given query; there is no post-processing or data-joining activity involved during a query execution
 - Cons: If an ACL changes on a node, also all other nodes that inherit from it will be re-indexed, including node properties and content
-- Cons: Alfresco query parsers cannot be used with this solution, therefore Alfresco Share won't work out of the box 
+- Cons: Alfresco query parsers cannot be used with this solution, therefore Alfresco Share won't work out of the box
 
 Project Structure
 ---
@@ -84,7 +84,13 @@ Repository
 
 Credits
 ---
-This project was have been developed by 
+This project was have been developed by
 * Alfresco Consultant [Maurizio Pillitu](http://session.it)
 * [Findwise](http://www.findwise.com/) ([Martin Nycander](https://github.com/Nycander) and [Andreas Salomonsson](https://github.com/andreassalomonsson))
-* [Zaizi](http://www.zaizi.com) ([Rafa Haro](https://github.com/rafaharo) and [Ivan Arroyo](https://github.com/iarroyo)) 
+* [Zaizi](http://www.zaizi.com) ([Rafa Haro](https://github.com/rafaharo) and [Ivan Arroyo](https://github.com/iarroyo))
+
+License
+---
+
+Please see the file [LICENSE.md](LICENSE.md) for the copyright licensing conditions attached to
+this codebase
