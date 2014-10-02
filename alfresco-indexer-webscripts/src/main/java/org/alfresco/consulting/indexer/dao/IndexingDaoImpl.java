@@ -1,19 +1,19 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+* Licensed to the Apache Software Foundation (ASF) under one or more
+* contributor license agreements. See the NOTICE file distributed with
+* this work for additional information regarding copyright ownership.
+* The ASF licenses this file to You under the Apache License, Version 2.0
+* (the "License"); you may not use this file except in compliance with
+* the License. You may obtain a copy of the License at
+*
+* http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 package org.alfresco.consulting.indexer.dao;
 
 import java.io.Serializable;
@@ -26,11 +26,13 @@ import java.util.Set;
 import org.alfresco.consulting.indexer.entities.NodeBatchLoadEntity;
 import org.alfresco.consulting.indexer.entities.NodeEntity;
 import org.alfresco.consulting.indexer.utils.Utils;
+import org.alfresco.model.ContentModel;
 import org.alfresco.service.ServiceRegistry;
 import org.alfresco.service.cmr.repository.NodeRef;
 import org.alfresco.service.cmr.repository.NodeService;
 import org.alfresco.service.cmr.repository.Path;
 import org.alfresco.service.cmr.repository.StoreRef;
+import org.alfresco.service.cmr.site.SiteService;
 import org.alfresco.service.namespace.QName;
 import org.alfresco.util.Pair;
 import org.apache.commons.lang.StringUtils;
@@ -63,8 +65,7 @@ public class IndexingDaoImpl
     private Set<String> mimeTypes;
     private Set<String> sites;
 
-    @SuppressWarnings("unchecked")
-	public List<NodeEntity> getNodesByAclChangesetId(Pair<Long, StoreRef> store, Long lastAclChangesetId, int maxResults)
+    public List<NodeEntity> getNodesByAclChangesetId(Pair<Long, StoreRef> store, Long lastAclChangesetId, int maxResults)
     {
         StoreRef storeRef = store.getSecond();
         if (maxResults <= 0 || maxResults == Integer.MAX_VALUE)
@@ -90,8 +91,7 @@ public class IndexingDaoImpl
                 Integer.MAX_VALUE)));
     }
 
-    @SuppressWarnings("unchecked")
-	public List<NodeEntity> getNodesByTransactionId(Pair<Long, StoreRef> store, Long lastTransactionId, int maxResults)
+    public List<NodeEntity> getNodesByTransactionId(Pair<Long, StoreRef> store, Long lastTransactionId, int maxResults)
     {
         StoreRef storeRef = store.getSecond();
         if (maxResults <= 0 || maxResults == Integer.MAX_VALUE)
@@ -180,7 +180,8 @@ public class IndexingDaoImpl
                 
                boolean shouldBeAdded=true;
                NodeRef nodeRef= new NodeRef(node.getStore().getStoreRef(),node.getUuid());
-                    
+               String nodeType="{"+node.getTypeNamespace()+"}"+node.getTypeName();  
+               
                if(nodeService.exists(nodeRef)){
                     
                     //Filter by site
@@ -213,10 +214,12 @@ public class IndexingDaoImpl
                             
                         }
                     }
-                    
-                    if(shouldBeAdded){
-                        filteredNodes.add(node);
-                    }
+                }else if(nodeType.equals(ContentModel.TYPE_DELETED)){
+                    shouldBeAdded=Boolean.TRUE;
+                }
+               
+                if(shouldBeAdded){
+                    filteredNodes.add(node);
                 }
             }
         }else{
@@ -252,6 +255,8 @@ public class IndexingDaoImpl
     public void setAllowedTypes(Set<String> allowedTypes)
     {
         this.allowedTypes = allowedTypes;
+        //Add mandatory type to retrieve deleted documents (workaround)
+        this.allowedTypes.add(ContentModel.TYPE_DELETED.toString());
     }
 
     public Set<String> getAllowedTypes()

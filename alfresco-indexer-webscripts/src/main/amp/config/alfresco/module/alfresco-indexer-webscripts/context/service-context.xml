@@ -62,47 +62,5 @@
     </property>
   </bean>
 
-  <bean id="webscript.org.alfresco.consulting.indexer.changes.get"
-        class="org.alfresco.consulting.indexer.webscripts.NodeChangesWebScript"
-        parent="webscript">
-    <property name="namespaceService" ref="NamespaceService"/>
-    <property name="qnameDao" ref="qnameDAO"/>
-    <property name="indexingService" ref="indexingService"/>
-    <property name="nodeDao" ref="nodeDAO"/>
-    <property name="propertiesUrlTemplate" value="${indexer.properties.url.template}"/>
-    <property name="maxNodesPerAcl" value="${indexer.changes.nodesperacl}"/>
-    <property name="maxNodesPerTxns" value="${indexer.changes.nodespertxn}"/>
-  </bean>
-  
-  <bean id="webscript.org.alfresco.consulting.indexer.actions.get"
-        class="org.alfresco.consulting.indexer.webscripts.NodeActionsWebScript"
-        parent="webscript">
-    <property name="namespaceService" ref="NamespaceService"/>
-    <property name="qnameDao" ref="qnameDAO"/>
-    <property name="indexingService" ref="indexingService"/>
-    <property name="nodeDao" ref="nodeDAO"/>
-    <property name="propertiesUrlTemplate" value="${indexer.properties.url.template}"/>
-  </bean>
-
-  <bean id="webscript.org.alfresco.consulting.indexer.details.get"
-        class="org.alfresco.consulting.indexer.webscripts.NodeDetailsWebScript"
-        parent="webscript">
-    <property name="dictionaryService" ref="DictionaryService"/>
-    <property name="namespaceService" ref="NamespaceService"/>
-    <property name="nodeService" ref="NodeService"/>
-    <property name="nodeDao" ref="nodeDAO"/>
-    <property name="aclDao" ref="aclDAO"/>
-    <property name="contentUrlPrefix" value="${indexer.content.url.prefix}"/>
-    <property name="shareUrlPrefix" value="${indexer.share.url.prefix}"/>
-    <property name="previewUrlPrefix" value="${indexer.preview.url.prefix}"/>
-    <property name="thumbnailUrlPrefix" value="${indexer.thumbnail.url.prefix}"/>
-  </bean>
-
-  <bean id="webscript.org.alfresco.consulting.indexer.authresolve.get"
-        class="org.alfresco.consulting.indexer.webscripts.AuthorityResolverWebScript"
-        parent="webscript">
-    <property name="authorityService" ref="AuthorityService"/>
-    <property name="personService" ref="PersonService"/>
-  </bean>
-
 </beans>
+

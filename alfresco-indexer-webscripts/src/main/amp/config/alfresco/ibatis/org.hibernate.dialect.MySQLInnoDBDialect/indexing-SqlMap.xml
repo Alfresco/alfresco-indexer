@@ -21,6 +21,7 @@
     n.id 				as id,
     n.uuid 				as uuid, 
     n.version 			as version, 
+    n.type_qname_id     as type_qname_id,
     n.store_id 			as store_id, 
     #{storeProtocol}             as protocol,
     #{storeIdentifier}           as identifier,
@@ -98,6 +99,7 @@
     n.id 				as id,
     n.uuid 				as uuid, 
     n.version 			as version, 
+    n.type_qname_id     as type_qname_id,
     n.store_id 			as store_id, 
     #{storeProtocol}             as protocol,
     #{storeIdentifier}           as identifier,
@@ -174,6 +176,7 @@
     node.id             as id,
     node.uuid           as uuid,
     node.version        as version,
+    node.type_qname_id     as type_qname_id,
     node.store_id       as store_id,
     #{storeProtocol}             as protocol,
     #{storeIdentifier}           as identifier,
@@ -187,8 +190,9 @@
     left outer join alf_namespace ns on qname.ns_id = ns.id
     
     join alf_node_properties np on np.node_id=node.id
-    join alf_qname qnp on qnp.id=np.qname_id and qnp.local_name='name'
+    join alf_qname qnp on qnp.id=np.qname_id and qnp.local_name in ('name','originalId')
     where
+    node.store_id = #{storeId} and
     node.uuid = #{uuid}
   </select>
   
