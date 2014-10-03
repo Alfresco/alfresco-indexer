@@ -157,6 +157,11 @@ public class NodeWebScriptTest extends BaseWebScriptTest {
         assertTrue(aspects.length() > 0);
         JSONArray properties = result.getJSONArray("properties");
         assertTrue(properties.length() > 0);
+        String mimetype = result.get("mimetype").toString();
+        assertNotNull(mimetype);
+        String size = result.get("size").toString();
+        assertNotNull(size);
+
         for (int i = 0; i < properties.length() - 1; i++) {
             JSONObject prop = properties.getJSONObject(i);
             String name = prop.get("name").toString();

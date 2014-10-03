@@ -33,6 +33,7 @@ import org.alfresco.repo.domain.permissions.Acl;
 import org.alfresco.repo.domain.permissions.AclDAO;
 import org.alfresco.repo.security.permissions.AccessControlEntry;
 import org.alfresco.service.cmr.dictionary.DictionaryService;
+import org.alfresco.service.cmr.repository.ContentData;
 import org.alfresco.service.cmr.repository.NodeRef;
 import org.alfresco.service.cmr.repository.NodeService;
 import org.alfresco.service.cmr.repository.Path;
@@ -94,7 +95,10 @@ public class NodeDetailsWebScript extends DeclarativeWebScript {
     Set<QName> aspectsSet = nodeService.getAspects(nodeRef);
     Set<String> aspects = toStringSet(aspectsSet);
 
-    //Get the node ACL Id
+    //Processing content data
+    ContentData contentData = (ContentData)propertyMap.get(ContentModel.PROP_CONTENT);
+
+      //Get the node ACL Id
     Long dbId = (Long)propertyMap.get(ContentModel.PROP_NODE_DBID);
     Long nodeAclId = nodeDao.getNodeAclId(dbId);
 
@@ -121,6 +125,11 @@ public class NodeDetailsWebScript extends DeclarativeWebScript {
     }
 
     Map<String, Object> model = new HashMap<String, Object>(1, 1.0f);
+    if (contentData != null) {
+      model.put("mimetype", contentData.getMimetype());
+      model.put("size", contentData.getSize());
+    }
+
     model.put("nsResolver", namespaceService);
     model.put("readableAuthorities", readableAuthorities);
     model.put("properties", properties);
@@ -156,8 +165,6 @@ public class NodeDetailsWebScript extends DeclarativeWebScript {
           model.put("shareUrlPath", shareUrlPath);
       }
     }
-
-
 
     String thumbnailUrlPath = String.format(
         "/api/node/%s/%s/%s/content/thumbnails/doclib?c=queue&ph=true&lastModified=1",

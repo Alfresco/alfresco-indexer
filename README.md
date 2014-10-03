@@ -82,6 +82,11 @@ Repository
 
 ```
 
+Disclaimer
+---
+* This project is NOT supported by Alfresco Support
+* This project is experimental, only few customers are starting to use it (mostly using the Alfresco ManifoldCF Connector)
+
 Credits
 ---
 This project was have been developed by
