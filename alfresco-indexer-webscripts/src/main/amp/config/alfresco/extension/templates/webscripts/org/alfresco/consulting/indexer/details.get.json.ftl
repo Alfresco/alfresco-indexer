@@ -7,6 +7,12 @@
     </#list>
   ],
   "path" : "${path}",
+  <#if mimetype??>
+  	"mimetype" : "${mimetype}",
+  </#if>
+  <#if size??>
+  	"size" : "${size}",
+  </#if>
   <#if shareUrlPath??>
     "shareUrlPath" : "${shareUrlPrefix + shareUrlPath}",
   </#if>

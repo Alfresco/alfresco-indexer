@@ -4,7 +4,7 @@
 <beans>
 
 	<bean
-		id="webscript.org.alfresco.consulting.indexer.webscripts.changes.get"
+		id="webscript.org.alfresco.consulting.indexer.changes.get"
 		class="org.alfresco.consulting.indexer.webscripts.NodeChangesWebScript"
 		parent="webscript">
 		<property name="namespaceService" ref="NamespaceService" />
@@ -17,7 +17,7 @@
 	</bean>
 
 	<bean
-		id="webscript.org.alfresco.consulting.indexer.webscripts.actions.get"
+		id="webscript.org.alfresco.consulting.indexer.actions.get"
 		class="org.alfresco.consulting.indexer.webscripts.NodeActionsWebScript"
 		parent="webscript">
 		<property name="namespaceService" ref="NamespaceService" />
@@ -28,7 +28,7 @@
 	</bean>
 
 	<bean
-		id="webscript.org.alfresco.consulting.indexer.webscripts.details.get"
+		id="webscript.org.alfresco.consulting.indexer.details.get"
 		class="org.alfresco.consulting.indexer.webscripts.NodeDetailsWebScript"
 		parent="webscript">
 		<property name="dictionaryService" ref="DictionaryService" />
@@ -48,14 +48,14 @@
 	</bean>
 
 	<bean
-		id="webscript.org.alfresco.consulting.indexer.webscripts.authresolve.get"
+		id="webscript.org.alfresco.consulting.indexer.authresolve.get"
 		class="org.alfresco.consulting.indexer.webscripts.AuthorityResolverWebScript"
 		parent="webscript">
 		<property name="authorityService" ref="AuthorityService" />
 		<property name="personService" ref="PersonService" />
 	</bean>
 
-	<bean id="webscript.org.alfresco.consulting.indexer.webscripts.nodeContent.get"
+	<bean id="webscript.org.alfresco.consulting.indexer.nodeContent.get"
 		class="org.alfresco.repo.web.scripts.solr.NodeContentGet" parent="webscript">
 		<property name="contentService" ref="contentService" />
 		<property name="nodeService" ref="nodeService" />

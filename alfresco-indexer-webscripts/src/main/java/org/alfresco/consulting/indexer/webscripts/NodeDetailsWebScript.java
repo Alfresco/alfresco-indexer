@@ -33,6 +33,7 @@ import org.alfresco.repo.domain.permissions.Acl;
 import org.alfresco.repo.domain.permissions.AclDAO;
 import org.alfresco.repo.security.permissions.AccessControlEntry;
 import org.alfresco.service.cmr.dictionary.DictionaryService;
+import org.alfresco.service.cmr.repository.ContentData;
 import org.alfresco.service.cmr.repository.NodeRef;
 import org.alfresco.service.cmr.repository.NodeService;
 import org.alfresco.service.cmr.repository.Path;
@@ -131,9 +132,6 @@ public class NodeDetailsWebScript extends DeclarativeWebScript
         model.put("thumbnailUrlPrefix", thumbnailUrlPrefix);
         model.put("previewUrlPrefix", previewUrlPrefix);
 
-        NodeRef parentRef = nodeService.getPrimaryParent(nodeRef).getParentRef();
-        model.put("parentRef", parentRef.toString());
-
         // Calculating the contentUrlPath and adding it only if the contentType is child of cm:content
         boolean isContentAware = isContentAware(nodeRef);
         if (isContentAware)
@@ -143,39 +141,31 @@ public class NodeDetailsWebScript extends DeclarativeWebScript
 
             if (properties.containsKey("cm:content"))
             {
-                String valueContent = properties.get("cm:content").getSecond();
-                ContentURL contentURL = new ContentURL(valueContent);
-                model.put("mimetype", contentURL.getMimetype());
-                model.put("size", contentURL.getSize());
+                ContentData contentData=(ContentData)nodeService.getProperty(nodeRef,ContentModel.PROP_CONTENT);
+                model.put("mimetype", contentData.getMimetype());
+                model.put("size", contentData.getSize());
                
             }
         }
 
         // Rendering out the (relative) URL path to Alfresco Share
         String shareUrlPath = null;
-        String shareParentUrlPath = null;
 
         if (!StringUtil.isEmpty(siteName))
         {
             String documentDetailsSiteFormat = "/page/site/%s/document-details?nodeRef=%s";
             shareUrlPath = String.format(documentDetailsSiteFormat, siteName, nodeRef.toString());
-            shareParentUrlPath = String.format(documentDetailsSiteFormat, siteName, parentRef.toString());
 
         }
         else
         {
             String documentDetailsFormat = "/page/document-details?nodeRef=%s";
             shareUrlPath = String.format(documentDetailsFormat, nodeRef.toString());
-            shareParentUrlPath = String.format(documentDetailsFormat, parentRef.toString());
         }
 
         if (shareUrlPath != null)
         {
             model.put("shareUrlPath", shareUrlPath);
-        }
-        if (shareParentUrlPath != null)
-        {
-            model.put("shareParentUrlPath", shareParentUrlPath);
         }
 
         String thumbnailUrlPath = String.format(
