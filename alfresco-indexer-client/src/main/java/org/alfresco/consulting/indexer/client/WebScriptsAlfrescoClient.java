@@ -421,13 +421,6 @@ private HttpGet createGetRequest(String url) {
 		return stream;
 	} catch (Exception e) {
 		throw new AlfrescoDownException("Alfresco appears to be down", e);
-	}finally{
-		try {
-			httpClient.close();
-		} catch (IOException e) {
-			logger.error("Error closing the Http Content Client: " + e.getMessage());
-		}
-		
 	}
   }
 }
