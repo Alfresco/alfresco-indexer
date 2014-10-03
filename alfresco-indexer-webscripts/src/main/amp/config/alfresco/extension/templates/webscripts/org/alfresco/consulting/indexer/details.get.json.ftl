@@ -8,7 +8,7 @@
   ],
   "path" : "${path}",
   "mimetype" : "${mimetype}",
-  "size" : "${size}",
+  "size" : "${size?c}",
   <#if shareUrlPath??>
     "shareUrlPath" : "${shareUrlPrefix + shareUrlPath}",
   </#if>
