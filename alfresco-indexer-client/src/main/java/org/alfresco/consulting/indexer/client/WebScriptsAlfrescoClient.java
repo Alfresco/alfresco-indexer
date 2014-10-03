@@ -115,10 +115,12 @@ public class WebScriptsAlfrescoClient implements AlfrescoClient {
 
 	  try{
 		  HttpGet httpGet = createGetRequest(url);
-		  HttpResponse response = httpClient.execute(httpGet);
+		  CloseableHttpResponse response = httpClient.execute(httpGet);
 		  HttpEntity entity = response.getEntity();
 		  AlfrescoResponse afResponse = fromHttpEntity(entity);
 		  EntityUtils.consume(entity);
+		  response.close();
+		  httpClient.close();
 		  return afResponse;
 	  } catch (IOException e) {
 		  logger.warn("Failed to fetch nodes.", e);
@@ -255,8 +257,11 @@ private HttpGet createGetRequest(String url) {
       HttpGet httpGet = createGetRequest(fullUrl);
       CloseableHttpResponse response = httpClient.execute(httpGet);
       HttpEntity entity = response.getEntity();
-      return CharStreams.toString(new InputStreamReader(entity.getContent(),
+      String result = CharStreams.toString(new InputStreamReader(entity.getContent(),
               "UTF-8"));
+      response.close();
+      httpClient.close();
+      return result;
     } catch (IOException e) {
       throw new AlfrescoDownException(e);
     }
@@ -325,28 +330,37 @@ private HttpGet createGetRequest(String url) {
 
   @Override
   public AlfrescoUser fetchUserAuthorities(String username)
-          throws AlfrescoDownException {
-    HttpResponse response;
-    try {
-      CloseableHttpClient httpClient = HttpClients.createDefault();
-      String url = String.format("%s%s", authoritiesUrl, username);
+		  throws AlfrescoDownException {
+	  CloseableHttpResponse response=null;
+	  CloseableHttpClient httpClient = HttpClients.createDefault();
+	  try {
+		  String url = String.format("%s%s", authoritiesUrl, username);
 
-      if (logger.isDebugEnabled()) {
-        logger.debug("Hitting url: " + url);
-      }
+		  if (logger.isDebugEnabled()) {
+			  logger.debug("Hitting url: " + url);
+		  }
 
-      HttpGet httpGet = createGetRequest(url);
-      response = httpClient.execute(httpGet);
-      HttpEntity entity = response.getEntity();
-      AlfrescoUser afResponse = userFromHttpEntity(entity);
-      EntityUtils.consume(entity);
-      return afResponse;
-    } catch (IOException e) {
-      if (logger.isDebugEnabled()) {
-        logger.warn("Failed to fetch nodes.", e);
-      }
-      throw new AlfrescoDownException("Alfresco appears to be down", e);
-    }
+		  HttpGet httpGet = createGetRequest(url);
+		  response = httpClient.execute(httpGet);
+		  HttpEntity entity = response.getEntity();
+		  AlfrescoUser afResponse = userFromHttpEntity(entity);
+		  EntityUtils.consume(entity);
+		  return afResponse;
+	  } catch (IOException e) {
+		  if (logger.isDebugEnabled()) {
+			  logger.warn("Failed to fetch nodes.", e);
+		  }
+		  throw new AlfrescoDownException("Alfresco appears to be down", e);
+	  }finally{
+
+		  try {
+			  if(response!=null)
+				  response.close();
+			  httpClient.close();
+		  } catch (IOException e) {
+			  // Nothing to do
+		  }
+	  }
   }
 
   @Override
@@ -403,9 +417,17 @@ private HttpGet createGetRequest(String url) {
 	  CloseableHttpClient httpClient = HttpClients.createDefault();
 	  try {
 		HttpResponse response = httpClient.execute(httpGet);
-		return response.getEntity().getContent();
+		InputStream stream = response.getEntity().getContent(); 
+		return stream;
 	} catch (Exception e) {
 		throw new AlfrescoDownException("Alfresco appears to be down", e);
+	}finally{
+		try {
+			httpClient.close();
+		} catch (IOException e) {
+			logger.error("Error closing the Http Content Client: " + e.getMessage());
+		}
+		
 	}
   }
 }
