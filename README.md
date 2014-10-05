@@ -70,7 +70,7 @@ Dependency
     <dependency>
         <groupId>org.alfresco.consulting.indexer</groupId>
         <artifactId>alfresco-indexer-client</artifactId>
-        <version>0.6.1</version>
+        <version>0.6.3</version>
     </dependency>
 ```
 
