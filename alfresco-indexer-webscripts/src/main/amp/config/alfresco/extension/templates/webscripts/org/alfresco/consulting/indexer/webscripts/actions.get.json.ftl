@@ -7,7 +7,7 @@
         <#assign suffix="/"+storeProtocol+"/"+storeId+"/"+node.uuid >
         <#assign nodeRef=storeProtocol+"://"+storeId+"/"+node.uuid >
         "name" : "${node.name}",
-        "propertiesUrl" : "${propertiesUrlTemplate + suffix}",
+        "propertiesUrl" : "${propertiesUrlPrefix + suffix}",
         "uuid" : "${node.uuid}",
         "nodeRef": "${nodeRef}",
         "type" : "${qname.toPrefixString(nsResolver)}",

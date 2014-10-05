@@ -166,7 +166,7 @@ public class NodeChangesWebScript extends DeclarativeWebScript {
     model.put("lastAclChangesetId", lastAclChangesetId);
     model.put("storeId", storeId);
     model.put("storeProtocol", storeProtocol);
-    model.put("propertiesUrlTemplate", propertiesUrlTemplate);
+    model.put("propertiesUrlPrefix", propertiesUrlPrefix);
     model.put("elapsedTime", elapsedTime);
 
     //This allows to call the static method QName.createQName from the FTL template
@@ -249,7 +249,7 @@ private void setIndexingFilters(JSONObject indexingParams)
   private IndexingDaoImpl indexingService;
   private NodeDAO nodeDao;
 
-  private String propertiesUrlTemplate;
+  private String propertiesUrlPrefix;
   private int maxNodesPerAcl = 1000;
   private int maxNodesPerTxns = 1000;
 
@@ -267,8 +267,8 @@ private void setIndexingFilters(JSONObject indexingParams)
     this.nodeDao = nodeDao;
   }
 
-  public void setPropertiesUrlTemplate(String propertiesUrlTemplate) {
-    this.propertiesUrlTemplate = propertiesUrlTemplate;
+  public void setPropertiesUrlPrefix(String propertiesUrlPrefix) {
+    this.propertiesUrlPrefix = propertiesUrlPrefix;
   }
 
   public void setMaxNodesPerAcl(int maxNodesPerAcl) {

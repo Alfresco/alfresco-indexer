@@ -10,21 +10,13 @@
     <parent>
         <groupId>org.alfresco.maven</groupId>
         <artifactId>alfresco-sdk-parent</artifactId>
-        <version>1.1.1</version>
+        <version>2.0.0-beta-4</version>
     </parent>
 
     <modules>
         <module>alfresco-indexer-webscripts</module>
         <module>alfresco-indexer-client</module>
     </modules>
-
-    <properties>
-        <alfresco.groupId>org.alfresco</alfresco.groupId>
-        <alfresco.version>4.2.f</alfresco.version>
-        <app.log.root.level>WARN</app.log.root.level>
-        <alfresco.data.location>alf_data_dev</alfresco.data.location>
-        <env>local</env>
-    </properties>
 
     <build>
         <plugins>
@@ -48,60 +40,6 @@
                 </configuration>
             </plugin>
         </plugins>
-        <pluginManagement>
-            <plugins>
-                <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
-                <plugin>
-                    <groupId>org.eclipse.m2e</groupId>
-                    <artifactId>lifecycle-mapping</artifactId>
-                    <version>1.0.0</version>
-                    <configuration>
-                        <lifecycleMappingMetadata>
-                            <pluginExecutions>
-                                <pluginExecution>
-                                    <pluginExecutionFilter>
-                                        <groupId>
-                                            org.alfresco.maven.plugin
-                                        </groupId>
-                                        <artifactId>
-                                            alfresco-maven-plugin
-                                        </artifactId>
-                                        <versionRange>
-                                            [1.1.1,)
-                                        </versionRange>
-                                        <goals>
-                                            <goal>set-version</goal>
-                                        </goals>
-                                    </pluginExecutionFilter>
-                                    <action>
-                                        <ignore />
-                                    </action>
-                                </pluginExecution>
-                                <pluginExecution>
-                                    <pluginExecutionFilter>
-                                        <groupId>
-                                            org.codehaus.mojo
-                                        </groupId>
-                                        <artifactId>
-                                            build-helper-maven-plugin
-                                        </artifactId>
-                                        <versionRange>
-                                            [1.8,)
-                                        </versionRange>
-                                        <goals>
-                                            <goal>add-test-resource</goal>
-                                        </goals>
-                                    </pluginExecutionFilter>
-                                    <action>
-                                        <ignore />
-                                    </action>
-                                </pluginExecution>
-                            </pluginExecutions>
-                        </lifecycleMappingMetadata>
-                    </configuration>
-                </plugin>
-            </plugins>
-        </pluginManagement>
     </build>
 
     <scm>

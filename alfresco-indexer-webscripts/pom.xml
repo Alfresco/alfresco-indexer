@@ -11,9 +11,13 @@
         <version>0.6.3-SNAPSHOT</version>
     </parent>
 
+    <properties>
+        <alfresco.version>5.0.a</alfresco.version>
+    </properties>
+
     <profiles>
         <profile>
-            <id>mao</id>
+            <id>mysql</id>
             <properties>
                 <alfresco.db.datasource.class>org.gjt.mm.mysql.Driver</alfresco.db.datasource.class>
                 <alfresco.db.url>jdbc:mysql://localhost:3306/alfresco</alfresco.db.url>
@@ -52,12 +56,6 @@
             <artifactId>alfresco-remote-api</artifactId>
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>${alfresco.groupId}</groupId>
-            <artifactId>alfresco-remote-api</artifactId>
-            <scope>provided</scope>
-            <classifier>config</classifier>
-        </dependency>
         <!-- Test dependencies -->
         <dependency>
             <groupId>${alfresco.groupId}</groupId>
@@ -95,29 +93,4 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.mortbay.jetty</groupId>
-                <artifactId>maven-jetty-plugin</artifactId>
-                <configuration>
-                    <jettyConfig>${project.build.directory}/jetty.xml</jettyConfig>
-                    <contextPath>/alfresco</contextPath>
-                </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>commons-dbcp</groupId>
-                        <artifactId>commons-dbcp</artifactId>
-                        <version>1.2</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>mysql</groupId>
-                        <artifactId>mysql-connector-java</artifactId>
-                        <version>5.1.26</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
-        </plugins>
-    </build>
 </project>

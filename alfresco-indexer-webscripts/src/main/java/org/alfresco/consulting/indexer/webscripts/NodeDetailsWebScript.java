@@ -135,17 +135,21 @@ public class NodeDetailsWebScript extends DeclarativeWebScript {
     model.put("properties", properties);
     model.put("aspects", aspects);
     model.put("path", path);
+    model.put("documentUrlPrefix", documentUrlPrefix);
     model.put("contentUrlPrefix", contentUrlPrefix);
     model.put("shareUrlPrefix", shareUrlPrefix);
     model.put("thumbnailUrlPrefix", thumbnailUrlPrefix);
     model.put("previewUrlPrefix", previewUrlPrefix);
+
+    String documentUrlPath = String.format("/%s/%s/%s",storeProtocol,storeId,uuid);
+    model.put("documentUrlPath", documentUrlPath);
 
     //Calculating the contentUrlPath and adding it only if the contentType is child of cm:content
     boolean isContentAware = isContentAware(nodeRef);
     if (isContentAware) {
       String contentUrlPath = String.format("/api/node/%s/%s/%s/content",storeProtocol,storeId,uuid);
       model.put("contentUrlPath", contentUrlPath);
-      
+
       //Rendering out the (relative) URL path to Alfresco Share
       String shareUrlPath = null;
       
@@ -235,6 +239,7 @@ public class NodeDetailsWebScript extends DeclarativeWebScript {
   private NodeService nodeService;
   private NodeDAO nodeDao;
   private AclDAO aclDao;
+  private String documentUrlPrefix;
   private String contentUrlPrefix;
   private String shareUrlPrefix;
   private String previewUrlPrefix;
@@ -255,6 +260,8 @@ public class NodeDetailsWebScript extends DeclarativeWebScript {
   public void setAclDao(AclDAO aclDao) {
     this.aclDao = aclDao;
   }
+
+  public void setDocumentUrlPrefix(String documentUrlPrefix) { this.documentUrlPrefix = documentUrlPrefix; }
 
   public void setContentUrlPrefix(String contentUrlPrefix) {
     this.contentUrlPrefix = contentUrlPrefix;

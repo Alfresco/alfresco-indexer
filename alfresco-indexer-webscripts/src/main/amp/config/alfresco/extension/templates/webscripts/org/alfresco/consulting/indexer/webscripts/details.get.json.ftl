@@ -7,13 +7,20 @@
     </#list>
   ],
   "path" : "${path}",
-  "mimetype" : "${mimetype}",
-  "size" : "${size?c}",
-  <#if shareUrlPath??>
-    "shareUrlPath" : "${shareUrlPrefix + shareUrlPath}",
+  "documentUrl" : "${documentUrlPrefix + documentUrlPath}",
+
+  <#if mimetype??>
+    "mimetype" : "${mimetype}",
   </#if>
+  <#if size??>
+    "size" : "${size?c}",
+  </#if>
+
   <#if contentUrlPath??>
     "contentUrlPath" : "${contentUrlPrefix + contentUrlPath}",
+  </#if>
+  <#if shareUrlPath??>
+    "shareUrlPath" : "${shareUrlPrefix + shareUrlPath}",
   </#if>
   <#if thumbnailUrlPath??>
     "thumbnailUrlPath" : "${thumbnailUrlPrefix + thumbnailUrlPath}",

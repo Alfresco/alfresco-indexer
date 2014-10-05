@@ -75,7 +75,7 @@ public class NodeActionsWebScript extends DeclarativeWebScript
         model.put("nodes", nodes);
         model.put("storeId", storeId);
         model.put("storeProtocol", storeProtocol);
-        model.put("propertiesUrlTemplate", propertiesUrlTemplate);
+        model.put("propertiesUrlPrefix", propertiesUrlPrefix);
 
         // This allows to call the static method QName.createQName from the FTL template
         try
@@ -101,8 +101,7 @@ public class NodeActionsWebScript extends DeclarativeWebScript
     private QNameDAO qnameDao;
     private IndexingDaoImpl indexingService;
     private NodeDAO nodeDao;
-
-    private String propertiesUrlTemplate;
+    private String propertiesUrlPrefix;
 
     public void setNamespaceService(NamespaceService namespaceService)
     {
@@ -124,18 +123,6 @@ public class NodeActionsWebScript extends DeclarativeWebScript
         this.nodeDao = nodeDao;
     }
 
-    public void setPropertiesUrlTemplate(String propertiesUrlTemplate)
-    {
-        this.propertiesUrlTemplate = propertiesUrlTemplate;
-    }
+    public void setPropertiesUrlPrefix(String propertiesUrlPrefix) { this.propertiesUrlPrefix = propertiesUrlPrefix; }
 
-//    public void setMaxNodesPerAcl(int maxNodesPerAcl)
-//    {
-//        this.maxNodesPerAcl = maxNodesPerAcl;
-//    }
-//
-//    public void setMaxNodesPerTxns(int maxNodesPerTxns)
-//    {
-//        this.maxNodesPerTxns = maxNodesPerTxns;
-//    }
 }

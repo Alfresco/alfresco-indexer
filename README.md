@@ -25,7 +25,8 @@ In `alfresco-global.properties` you can tweak the following default parameters.
 
 ### Url Prefixes
 ```
-indexer.properties.url.template = http://localhost:8080/alfresco/service/node/details
+indexer.properties.url.prefix = http://localhost:8080/alfresco/service/node/details
+indexer.document.url.prefix = http://localhost:8080/alfresco/service/slingshot/node
 indexer.content.url.prefix = http://localhost:8080/alfresco/service
 indexer.share.url.prefix = http://localhost:8888/share
 indexer.preview.url.prefix = http://localhost:8080/alfresco/service
