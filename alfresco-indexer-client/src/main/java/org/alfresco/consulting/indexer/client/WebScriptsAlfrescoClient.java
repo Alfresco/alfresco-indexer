@@ -16,11 +16,7 @@
  */
 package org.alfresco.consulting.indexer.client;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -63,10 +59,10 @@ public class WebScriptsAlfrescoClient implements AlfrescoClient {
   private static final String STORE_PROTOCOL = "store_protocol";
   private static final String USERNAME = "username";
   private static final String AUTHORITIES = "authorities";
-//  private static final String UUIDS = "uuids";
+
   private final Gson gson = new Gson();
+
   private final String changesUrl;
-//  private final String uuidsUrl;
   private final String actionsUrl;
   private final String metadataUrl;
   private final String authoritiesUrl;
@@ -84,9 +80,8 @@ public class WebScriptsAlfrescoClient implements AlfrescoClient {
                                   String endpoint, String storeProtocol, String storeId, String username,
                                   String password) {
     changesUrl = String.format("%s://%s%s/node/changes/%s/%s", protocol, hostname, endpoint, storeProtocol, storeId);
-//    uuidsUrl = String.format("%s://%s%s/node/uuids/%s/%s", protocol, hostname, endpoint, storeProtocol, storeId);
     actionsUrl = String.format("%s://%s%s/node/actions/%s/%s", protocol, hostname, endpoint, storeProtocol, storeId);
-    metadataUrl = String.format("%s://%s%s/node/details/%s/%s", protocol, hostname, endpoint, storeProtocol, storeId);
+    metadataUrl = String.format("%s://%s%s/slingshot/node/%s/%s", protocol, hostname, endpoint, storeProtocol, storeId);
     authoritiesUrl = String.format("%s://%s%s/api/node/auth/resolve/", protocol, hostname, endpoint);
     this.username = username;
     this.password = password;
@@ -192,16 +187,6 @@ private HttpGet createGetRequest(String url) {
     return new AlfrescoResponse(lastTransactionId, lastAclChangesetId, storeId, storeProtocol, documents);
   }
   
-//  private Collection<String> extractIDs(HttpEntity entity) throws IOException {
-//	  Collection<String> uuids = Sets.newHashSet();
-//	  Reader entityReader = new InputStreamReader(entity.getContent());
-//	  JsonObject responseObject = gson.fromJson(entityReader, JsonObject.class);
-//	  JsonArray array = responseObject.getAsJsonArray(UUIDS);
-//	  for(JsonElement nextId:array)
-//		  uuids.add(nextId.getAsString());
-//	  return uuids;
-//  }
-
   private long getStringAsLong(JsonObject responseObject, String key, long defaultValue) {
     String string = getString(responseObject, key);
     if (Strings.isNullOrEmpty(string)) {
@@ -241,10 +226,12 @@ private HttpGet createGetRequest(String url) {
     @SuppressWarnings("unchecked")
     Map<String, Object> map = gson.fromJson(json, Map.class);
 
-    List<Map<String, String>> properties = extractPropertiesFieldFromMap(nodeUuid, map);
+    List<Map<String, Serializable>> properties = extractPropertiesFieldFromMap(nodeUuid, map);
 
-    for (Map<String, String> e : properties) {
-      map.put(e.get("name"), e.get("value"));
+    for (Map<String, Serializable> e : properties) {
+      String name = (String)((Map)e.get("name")).get("prefixedName");
+      String value = ((Map)((List)e.get("values")).get(0)).get("value").toString();
+      map.put(name, value);
     }
     return map;
   }
@@ -268,7 +255,7 @@ private HttpGet createGetRequest(String url) {
   }
 
   @SuppressWarnings("unchecked")
-  private List<Map<String, String>> extractPropertiesFieldFromMap(String nodeUuid,
+  private List<Map<String, Serializable>> extractPropertiesFieldFromMap(String nodeUuid,
           Map<String, Object> map) {
     Object properties = map.remove(FIELD_PROPERTIES);
     if(properties == null){
@@ -279,7 +266,7 @@ private HttpGet createGetRequest(String url) {
       throw new AlfrescoDownException(FIELD_PROPERTIES
               + " is not of type List, it is of type " + properties.getClass());
     }
-    return (List<Map<String, String>>) properties;
+    return (List<Map<String, Serializable>>) properties;
   }
 
   private AlfrescoUser userFromHttpEntity(HttpEntity entity) throws IOException {

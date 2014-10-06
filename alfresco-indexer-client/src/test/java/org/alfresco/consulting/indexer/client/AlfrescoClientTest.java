@@ -55,7 +55,7 @@ public class AlfrescoClientTest {
       STORE_ID + "\\?" +
       lastTransactionParam + "=[0-9]+&" +
       lastAclChangesetParam + "=[0-9]+";
-  private final String metadataEndpoint = "/alfresco/service/node/details/" + STORE_PROTOCOL + "/" +
+  private final String metadataEndpoint = "/alfresco/service/slingshot/node/" + STORE_PROTOCOL + "/" +
       STORE_ID + "/";
   private final String authoritiesEndpoint = "/alfresco/service/api/node/auth/resolve/";
 

@@ -1,15 +1,334 @@
 {
-	"path": "A/B/C",
-	"readableAuthorities": [ "1", "2", "3" ],
-	"properties": [ {
-			"name": "pippo",
-			"value": "pluto",
-			"type": "java.lang.String"
-		}, {
-			"name": "foo",
-			"value": "5",
-			"type": "java.lang.Double"
-		}
-	],
-	"aspects": [ "a", "b", "c" ]
+   "nodeRef": "workspace://SpacesStore/1d981316-baaf-4ef7-801b-c6aa5b1e102d",
+   "qnamePath": {
+   	"name": "\/{http:\/\/www.alfresco.org\/model\/application\/1.0}company_home\/{http:\/\/www.alfresco.org\/model\/site\/1.0}sites\/{http:\/\/www.alfresco.org\/model\/content\/1.0}swsdp\/{http:\/\/www.alfresco.org\/model\/content\/1.0}surf-config\/{http:\/\/www.alfresco.org\/model\/content\/1.0}components\/{http:\/\/www.alfresco.org\/model\/content\/1.0}page.title.site_x007e_swsdp_x007e_dashboard.xml",
+   	"prefixedName": "\/app:company_home\/st:sites\/cm:swsdp\/cm:surf-config\/cm:components\/cm:page.title.site_x007e_swsdp_x007e_dashboard.xml"
+	},
+   "name": {
+   	"name": "{http:\/\/www.alfresco.org\/model\/content\/1.0}page.title.site~swsdp~dashboard.xml",
+   	"prefixedName": "cm:page.title.site~swsdp~dashboard.xml"
+	},
+   "parentNodeRef": "workspace://SpacesStore/ea915509-f71c-4b81-a600-cd96ddb9fce6",
+   "type": {
+   	"name": "{http:\/\/www.alfresco.org\/model\/content\/1.0}content",
+   	"prefixedName": "cm:content"
+	},
+   "id": "1d981316-baaf-4ef7-801b-c6aa5b1e102d",
+   "aspects": [
+      {
+      	"name": "{http:\/\/www.alfresco.org\/model\/content\/1.0}auditable",
+      	"prefixedName": "cm:auditable"
+   	}
+      ,
+      {
+      	"name": "{http:\/\/www.alfresco.org\/model\/system\/1.0}referenceable",
+      	"prefixedName": "sys:referenceable"
+   	}
+      ,
+      {
+      	"name": "{http:\/\/www.alfresco.org\/model\/system\/1.0}localized",
+      	"prefixedName": "sys:localized"
+   	}
+      
+   ],
+   "properties": [
+      {
+         "name": {
+         	"name": "{http:\/\/www.alfresco.org\/model\/content\/1.0}name",
+         	"prefixedName": "cm:name"
+      	},
+         "values": [
+      		{
+      			"dataType": "{http:\/\/www.alfresco.org\/model\/dictionary\/1.0}text",
+      			"value": "page.title.site~swsdp~dashboard.xml",
+      			"isContent": false,
+      			"isNodeRef": false,
+      			"isNullValue": false
+      		}
+      	],
+         "type": {
+         	"name": "{http:\/\/www.alfresco.org\/model\/dictionary\/1.0}text",
+         	"prefixedName": "d:text"
+      	},
+      	"multiple": false,
+         "residual": false
+      },
+      {
+         "name": {
+         	"name": "{http:\/\/www.alfresco.org\/model\/system\/1.0}node-dbid",
+         	"prefixedName": "sys:node-dbid"
+      	},
+         "values": [
+      		{
+      			"dataType": "{http:\/\/www.alfresco.org\/model\/dictionary\/1.0}long",
+      			"value": 710,
+      			"isContent": false,
+      			"isNodeRef": false,
+      			"isNullValue": false
+      		}
+      	],
+         "type": {
+         	"name": "{http:\/\/www.alfresco.org\/model\/dictionary\/1.0}long",
+         	"prefixedName": "d:long"
+      	},
+      	"multiple": false,
+         "residual": false
+      },
+      {
+         "name": {
+         	"name": "{http:\/\/www.alfresco.org\/model\/system\/1.0}store-identifier",
+         	"prefixedName": "sys:store-identifier"
+      	},
+         "values": [
+      		{
+      			"dataType": "{http:\/\/www.alfresco.org\/model\/dictionary\/1.0}text",
+      			"value": "SpacesStore",
+      			"isContent": false,
+      			"isNodeRef": false,
+      			"isNullValue": false
+      		}
+      	],
+         "type": {
+         	"name": "{http:\/\/www.alfresco.org\/model\/dictionary\/1.0}text",
+         	"prefixedName": "d:text"
+      	},
+      	"multiple": false,
+         "residual": false
+      },
+      {
+         "name": {
+         	"name": "{http:\/\/www.alfresco.org\/model\/system\/1.0}locale",
+         	"prefixedName": "sys:locale"
+      	},
+         "values": [
+      		{
+      			"dataType": "{http:\/\/www.alfresco.org\/model\/dictionary\/1.0}locale",
+      			"value": "en_GB",
+      			"isContent": false,
+      			"isNodeRef": false,
+      			"isNullValue": false
+      		}
+      	],
+         "type": {
+         	"name": "{http:\/\/www.alfresco.org\/model\/dictionary\/1.0}locale",
+         	"prefixedName": "d:locale"
+      	},
+      	"multiple": false,
+         "residual": false
+      },
+      {
+         "name": {
+         	"name": "{http:\/\/www.alfresco.org\/model\/content\/1.0}content",
+         	"prefixedName": "cm:content"
+      	},
+         "values": [
+      		{
+      			"dataType": "{http:\/\/www.alfresco.org\/model\/dictionary\/1.0}content",
+      			"value": "contentUrl=store://2014/10/5/20/3/d094422b-8cbb-42f7-94ff-0d1695862215.bin|mimetype=text/xml|size=262|encoding=ISO-8859-1|locale=en_US_|id=230",
+      			"isContent": true,
+      			"isNodeRef": false,
+      			"isNullValue": false
+      		}
+      	],
+         "type": {
+         	"name": "{http:\/\/www.alfresco.org\/model\/dictionary\/1.0}content",
+         	"prefixedName": "d:content"
+      	},
+      	"multiple": false,
+         "residual": false
+      },
+      {
+         "name": {
+         	"name": "{http:\/\/www.alfresco.org\/model\/system\/1.0}node-uuid",
+         	"prefixedName": "sys:node-uuid"
+      	},
+         "values": [
+      		{
+      			"dataType": "{http:\/\/www.alfresco.org\/model\/dictionary\/1.0}text",
+      			"value": "1d981316-baaf-4ef7-801b-c6aa5b1e102d",
+      			"isContent": false,
+      			"isNodeRef": false,
+      			"isNullValue": false
+      		}
+      	],
+         "type": {
+         	"name": "{http:\/\/www.alfresco.org\/model\/dictionary\/1.0}text",
+         	"prefixedName": "d:text"
+      	},
+      	"multiple": false,
+         "residual": false
+      },
+      {
+         "name": {
+         	"name": "{http:\/\/www.alfresco.org\/model\/content\/1.0}modified",
+         	"prefixedName": "cm:modified"
+      	},
+         "values": [
+      		{
+      			"dataType": "{http:\/\/www.alfresco.org\/model\/dictionary\/1.0}datetime",
+      			"value": "14 Jun 2011 16:16:57 GMT+0200 (CEST)",
+      			"isContent": false,
+      			"isNodeRef": false,
+      			"isNullValue": false
+      		}
+      	],
+         "type": {
+         	"name": "{http:\/\/www.alfresco.org\/model\/dictionary\/1.0}datetime",
+         	"prefixedName": "d:datetime"
+      	},
+      	"multiple": false,
+         "residual": false
+      },
+      {
+         "name": {
+         	"name": "{http:\/\/www.alfresco.org\/model\/content\/1.0}created",
+         	"prefixedName": "cm:created"
+      	},
+         "values": [
+      		{
+      			"dataType": "{http:\/\/www.alfresco.org\/model\/dictionary\/1.0}datetime",
+      			"value": "14 Jun 2011 16:16:57 GMT+0200 (CEST)",
+      			"isContent": false,
+      			"isNodeRef": false,
+      			"isNullValue": false
+      		}
+      	],
+         "type": {
+         	"name": "{http:\/\/www.alfresco.org\/model\/dictionary\/1.0}datetime",
+         	"prefixedName": "d:datetime"
+      	},
+      	"multiple": false,
+         "residual": false
+      },
+      {
+         "name": {
+         	"name": "{http:\/\/www.alfresco.org\/model\/system\/1.0}store-protocol",
+         	"prefixedName": "sys:store-protocol"
+      	},
+         "values": [
+      		{
+      			"dataType": "{http:\/\/www.alfresco.org\/model\/dictionary\/1.0}text",
+      			"value": "workspace",
+      			"isContent": false,
+      			"isNodeRef": false,
+      			"isNullValue": false
+      		}
+      	],
+         "type": {
+         	"name": "{http:\/\/www.alfresco.org\/model\/dictionary\/1.0}text",
+         	"prefixedName": "d:text"
+      	},
+      	"multiple": false,
+         "residual": false
+      },
+      {
+         "name": {
+         	"name": "{http:\/\/www.alfresco.org\/model\/content\/1.0}creator",
+         	"prefixedName": "cm:creator"
+      	},
+         "values": [
+      		{
+      			"dataType": "{http:\/\/www.alfresco.org\/model\/dictionary\/1.0}text",
+      			"value": "admin",
+      			"isContent": false,
+      			"isNodeRef": false,
+      			"isNullValue": false
+      		}
+      	],
+         "type": {
+         	"name": "{http:\/\/www.alfresco.org\/model\/dictionary\/1.0}text",
+         	"prefixedName": "d:text"
+      	},
+      	"multiple": false,
+         "residual": false
+      },
+      {
+         "name": {
+         	"name": "{http:\/\/www.alfresco.org\/model\/content\/1.0}modifier",
+         	"prefixedName": "cm:modifier"
+      	},
+         "values": [
+      		{
+      			"dataType": "{http:\/\/www.alfresco.org\/model\/dictionary\/1.0}text",
+      			"value": "admin",
+      			"isContent": false,
+      			"isNodeRef": false,
+      			"isNullValue": false
+      		}
+      	],
+         "type": {
+         	"name": "{http:\/\/www.alfresco.org\/model\/dictionary\/1.0}text",
+         	"prefixedName": "d:text"
+      	},
+      	"multiple": false,
+         "residual": false
+      }
+   ],
+   "children": [
+   ],
+   "parents": [
+      {
+         "name": {
+         	"name": "{http:\/\/www.alfresco.org\/model\/content\/1.0}page.title.site~swsdp~dashboard.xml",
+         	"prefixedName": "cm:page.title.site~swsdp~dashboard.xml"
+      	},
+         "nodeRef": "workspace://SpacesStore/ea915509-f71c-4b81-a600-cd96ddb9fce6",
+         "type": {
+         	"name": "{http:\/\/www.alfresco.org\/model\/content\/1.0}folder",
+         	"prefixedName": "cm:folder"
+      	},
+         "assocType": {
+         	"name": "{http:\/\/www.alfresco.org\/model\/content\/1.0}contains",
+         	"prefixedName": "cm:contains"
+      	},
+         "primary": true
+      }
+   ],
+   "assocs": [
+   ],
+   "sourceAssocs": [
+   ],
+   "permissions": {
+      "entries": [
+         {
+            "permission": "SiteCollaborator",
+            "authority": "GROUP_site_swsdp_SiteCollaborator",
+            "rel": "ALLOWED"
+         },
+         {
+            "permission": "SiteManager",
+            "authority": "GROUP_site_swsdp_SiteManager",
+            "rel": "ALLOWED"
+         },
+         {
+            "permission": "SiteConsumer",
+            "authority": "GROUP_site_swsdp_SiteConsumer",
+            "rel": "ALLOWED"
+         },
+         {
+            "permission": "SiteConsumer",
+            "authority": "GROUP_EVERYONE",
+            "rel": "ALLOWED"
+         },
+         {
+            "permission": "SiteContributor",
+            "authority": "GROUP_site_swsdp_SiteContributor",
+            "rel": "ALLOWED"
+         },
+         {
+            "permission": "ReadPermissions",
+            "authority": "GROUP_EVERYONE",
+            "rel": "ALLOWED"
+         }
+      ],
+      "masks": [
+         {
+            "permission": "All <No Mask>",
+            "authority": "All",
+            "rel": "Allowed"
+         }
+      ],
+      "inherit": true,
+      "owner": "admin"
+   }
 }
