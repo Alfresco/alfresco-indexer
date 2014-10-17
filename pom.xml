@@ -13,8 +13,13 @@
         <version>2.0.0-beta-4</version>
     </parent>
 
+    <properties>
+        <alfresco.version>5.0.a</alfresco.version>
+    </properties>
+
     <modules>
         <module>alfresco-indexer-webscripts</module>
+        <module>alfresco-indexer-webscripts-war</module>
         <module>alfresco-indexer-client</module>
     </modules>
 
@@ -62,4 +67,24 @@
             <url>dav:https://repository-maoo.forge.cloudbees.com/release/</url>
         </repository>
     </distributionManagement>
+
+    <profiles>
+        <profile>
+            <id>mysql</id>
+            <properties>
+                <alfresco.db.datasource.class>org.gjt.mm.mysql.Driver</alfresco.db.datasource.class>
+                <alfresco.db.url>jdbc:mysql://localhost:3306/alfresco</alfresco.db.url>
+                <alfresco.db.username>root</alfresco.db.username>
+                <alfresco.db.password />
+            </properties>
+            <dependencies>
+                <dependency>
+                    <groupId>mysql</groupId>
+                    <artifactId>mysql-connector-java</artifactId>
+                    <version>5.1.26</version>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
+
 </project>
