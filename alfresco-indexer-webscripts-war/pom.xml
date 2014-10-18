@@ -49,7 +49,6 @@
     </dependencies>
 
     <build>
-        <finalName>alfresco</finalName>
         <plugins>
             <plugin>
                 <artifactId>maven-war-plugin</artifactId>
