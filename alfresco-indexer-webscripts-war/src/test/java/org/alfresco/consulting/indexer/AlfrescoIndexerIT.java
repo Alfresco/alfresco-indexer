@@ -46,25 +46,7 @@ public class AlfrescoIndexerIT {
 
       //Checking metadata of one specific node, given its path
       if ("/app:company_home/st:sites/cm:swsdp/cm:documentLibrary/cm:Agency_x0020_Files/cm:Logo_x0020_Files/cm:logo.png".equals(path)) {
-        List<String> aspects = (List<String>) metadata.get("aspects");
-        List<String> readableAuthorities = (List<String>) metadata.get("readableAuthorities");
-
-        assertTrue(aspects.contains("cm:titled"));
-        assertTrue(aspects.contains("exif:exif"));
-        assertTrue(aspects.contains("cm:rateable"));
-
-        assertTrue(readableAuthorities.contains("GROUP_EVERYONE"));
-        assertTrue(readableAuthorities.contains("GROUP_site_swsdp_SiteConsumer"));
-        assertTrue(readableAuthorities.contains("GROUP_site_swsdp_SiteContributor"));
-
-        assertEquals("logo.png", metadata.get("cm:title"));
-        assertEquals("abeecher", metadata.get("cm:modifier"));
-
-        assertTrue(((String) metadata.get("documentUrl")).contains(uuid));
-        assertTrue(((String) metadata.get("contentUrlPath")).contains(uuid));
-        assertTrue(((String) metadata.get("shareUrlPath")).contains(uuid));
-        assertTrue(((String) metadata.get("thumbnailUrlPath")).contains(uuid));
-        assertTrue(((String) metadata.get("previewUrlPath")).contains(uuid));
+        assertMetadata(uuid, metadata);
       }
     }
 
@@ -84,5 +66,27 @@ public class AlfrescoIndexerIT {
     Map<String, Object> metadata = client.fetchMetadata(uuid);
     assertTrue(((String) metadata.get("cm:name")).startsWith("test"));
     assertEquals("admin", metadata.get("cm:modifier"));
+  }
+
+  private void assertMetadata(String uuid, Map<String, Object> metadata) {
+    List<String> aspects = (List<String>) metadata.get("aspects");
+    List<String> readableAuthorities = (List<String>) metadata.get("readableAuthorities");
+
+    assertTrue(aspects.contains("cm:titled"));
+    assertTrue(aspects.contains("exif:exif"));
+    assertTrue(aspects.contains("cm:rateable"));
+
+    assertTrue(readableAuthorities.contains("GROUP_EVERYONE"));
+    assertTrue(readableAuthorities.contains("GROUP_site_swsdp_SiteConsumer"));
+    assertTrue(readableAuthorities.contains("GROUP_site_swsdp_SiteContributor"));
+
+    assertEquals("logo.png", metadata.get("cm:title"));
+    assertEquals("abeecher", metadata.get("cm:modifier"));
+
+    assertTrue(((String) metadata.get("documentUrl")).contains(uuid));
+    assertTrue(((String) metadata.get("contentUrlPath")).contains(uuid));
+    assertTrue(((String) metadata.get("shareUrlPath")).contains(uuid));
+    assertTrue(((String) metadata.get("thumbnailUrlPath")).contains(uuid));
+    assertTrue(((String) metadata.get("previewUrlPath")).contains(uuid));
   }
 }
