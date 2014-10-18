@@ -15,12 +15,13 @@
 
     <properties>
         <alfresco.version>5.0.a</alfresco.version>
+        <alfresco.data.location>target/alf_data_dev</alfresco.data.location>
     </properties>
 
     <modules>
         <module>alfresco-indexer-webscripts</module>
-        <module>alfresco-indexer-webscripts-war</module>
         <module>alfresco-indexer-client</module>
+        <module>alfresco-indexer-webscripts-war</module>
     </modules>
 
     <build>
