@@ -27,7 +27,7 @@ public class AlfrescoIndexerIT {
         "admin", "admin");
     assertNotNull(client);
 
-    //Fetching all Alfresco nodes, expecting 65 results
+    //Fetching all Alfresco nodes that have (ever) changed, expecting 65 results
     AlfrescoResponse response = client.fetchNodes(0, 0, new AlfrescoFilters());
     List<Map<String, Object>> list = response.getDocumentList();
     assertEquals(65, list.size());
