@@ -36,11 +36,15 @@ public class AlfrescoIndexerIT {
     assertEquals("SpacesStore", response.getStoreId());
     assertEquals("workspace", response.getStoreProtocol());
 
-    //Fetching metadata of one specific result, given its path
+    //Iterate on all changed nodes
     for (Map<String, Object> d : list) {
       String uuid = (String) d.get("uuid");
+
+      //Fetching metadata of the changed node
       Map<String, Object> metadata = client.fetchMetadata(uuid);
       String path = (String) metadata.get("path");
+
+      //Checking metadata of one specific node, given its path
       if ("/app:company_home/st:sites/cm:swsdp/cm:documentLibrary/cm:Agency_x0020_Files/cm:Logo_x0020_Files/cm:logo.png".equals(path)) {
         List<String> aspects = (List<String>) metadata.get("aspects");
         List<String> readableAuthorities = (List<String>) metadata.get("readableAuthorities");
