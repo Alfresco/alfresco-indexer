@@ -7,7 +7,7 @@
     </#list>
   ],
   "path" : "${path}",
-  "documentUrl" : "${documentUrlPrefix + documentUrlPath}",
+  "documentUrl" : "${serviceContextPath + documentUrlPrefix + documentUrlPath}",
 
   <#if mimetype??>
     "mimetype" : "${mimetype}",
@@ -17,16 +17,16 @@
   </#if>
 
   <#if contentUrlPath??>
-    "contentUrlPath" : "${contentUrlPrefix + contentUrlPath}",
+    "contentUrlPath" : "${serviceContextPath + contentUrlPath}",
+  </#if>
+  <#if thumbnailUrlPath??>
+    "thumbnailUrlPath" : "${serviceContextPath + thumbnailUrlPath}",
+  </#if>
+  <#if previewUrlPath??>
+    "previewUrlPath" : "${serviceContextPath + previewUrlPath}",
   </#if>
   <#if shareUrlPath??>
     "shareUrlPath" : "${shareUrlPrefix + shareUrlPath}",
-  </#if>
-  <#if thumbnailUrlPath??>
-    "thumbnailUrlPath" : "${thumbnailUrlPrefix + thumbnailUrlPath}",
-  </#if>
-  <#if previewUrlPath??>
-    "previewUrlPath" : "${previewUrlPrefix + previewUrlPath}",
   </#if>
 
   <#assign propNames = properties?keys>

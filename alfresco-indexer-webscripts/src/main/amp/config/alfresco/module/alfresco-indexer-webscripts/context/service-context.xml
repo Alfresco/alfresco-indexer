@@ -93,10 +93,7 @@
     <property name="nodeDao" ref="nodeDAO"/>
     <property name="aclDao" ref="aclDAO"/>
     <property name="documentUrlPrefix" value="${indexer.document.url.prefix}"/>
-    <property name="contentUrlPrefix" value="${indexer.content.url.prefix}"/>
     <property name="shareUrlPrefix" value="${indexer.share.url.prefix}"/>
-    <property name="previewUrlPrefix" value="${indexer.preview.url.prefix}"/>
-    <property name="thumbnailUrlPrefix" value="${indexer.thumbnail.url.prefix}"/>
   </bean>
 
   <bean id="webscript.org.alfresco.consulting.indexer.webscripts.authresolve.get"

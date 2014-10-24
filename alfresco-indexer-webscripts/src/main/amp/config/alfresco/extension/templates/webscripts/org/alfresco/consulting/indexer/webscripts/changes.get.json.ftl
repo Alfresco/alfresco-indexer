@@ -6,7 +6,7 @@
       {
         <#assign qname=QName.createQName(node.getTypeNamespace(),node.getTypeName()) >
         <#assign suffix="/"+storeProtocol+"/"+storeId+"/"+node.uuid >
-        "propertiesUrl" : "${propertiesUrlPrefix + suffix}",
+        "propertiesUrl" : "${serviceContextPath + propertiesUrlPrefix + suffix}",
         "uuid" : "${node.uuid}",
         "type" : "${qname.toPrefixString(nsResolver)}",
         "deleted" : ${node.getDeleted(qnameDao)?string}

@@ -67,7 +67,9 @@ public class NodeChangesWebScript extends DeclarativeWebScript {
   @Override
   protected Map<String, Object> executeImpl(WebScriptRequest req, Status status, Cache cache) {
 
-    //start time  
+    final String serviceContextPath = req.getServerPath()+req.getServiceContextPath();
+
+    //start time
     long startTime = System.currentTimeMillis();  
       
     //Fetching request params
@@ -166,6 +168,7 @@ public class NodeChangesWebScript extends DeclarativeWebScript {
     model.put("lastAclChangesetId", lastAclChangesetId);
     model.put("storeId", storeId);
     model.put("storeProtocol", storeProtocol);
+    model.put("serviceContextPath", serviceContextPath);
     model.put("propertiesUrlPrefix", propertiesUrlPrefix);
     model.put("elapsedTime", elapsedTime);
 

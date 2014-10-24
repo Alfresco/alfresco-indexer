@@ -76,6 +76,9 @@ public class NodeDetailsWebScript extends DeclarativeWebScript {
 
   @Override
   protected Map<String, Object> executeImpl(WebScriptRequest req, Status status, Cache cache) {
+
+    final String serviceContextPath = req.getServerPath()+req.getServiceContextPath();
+
     final List<String> readableAuthorities = new ArrayList<String>();
 
     //Parsing parameters passed from the WebScript invocation
@@ -135,11 +138,9 @@ public class NodeDetailsWebScript extends DeclarativeWebScript {
     model.put("properties", properties);
     model.put("aspects", aspects);
     model.put("path", path);
+    model.put("serviceContextPath", serviceContextPath);
     model.put("documentUrlPrefix", documentUrlPrefix);
-    model.put("contentUrlPrefix", contentUrlPrefix);
-    model.put("shareUrlPrefix", shareUrlPrefix);
-    model.put("thumbnailUrlPrefix", thumbnailUrlPrefix);
-    model.put("previewUrlPrefix", previewUrlPrefix);
+    model.put("shareUrl", shareUrl);
 
     String documentUrlPath = String.format("/%s/%s/%s",storeProtocol,storeId,uuid);
     model.put("documentUrlPath", documentUrlPath);
@@ -240,10 +241,7 @@ public class NodeDetailsWebScript extends DeclarativeWebScript {
   private NodeDAO nodeDao;
   private AclDAO aclDao;
   private String documentUrlPrefix;
-  private String contentUrlPrefix;
-  private String shareUrlPrefix;
-  private String previewUrlPrefix;
-  private String thumbnailUrlPrefix;
+  private String shareUrl;
 
   public void setDictionaryService(DictionaryService dictionaryService) {
     this.dictionaryService = dictionaryService;
@@ -263,19 +261,7 @@ public class NodeDetailsWebScript extends DeclarativeWebScript {
 
   public void setDocumentUrlPrefix(String documentUrlPrefix) { this.documentUrlPrefix = documentUrlPrefix; }
 
-  public void setContentUrlPrefix(String contentUrlPrefix) {
-    this.contentUrlPrefix = contentUrlPrefix;
-  }
-
-  public void setShareUrlPrefix(String shareUrlPrefix) {
-    this.shareUrlPrefix = shareUrlPrefix;
-  }
-
-  public void setPreviewUrlPrefix(String previewUrlPrefix) {
-    this.previewUrlPrefix = previewUrlPrefix;
-  }
-
-  public void setThumbnailUrlPrefix(String thumbnailUrlPrefix) {
-    this.thumbnailUrlPrefix = thumbnailUrlPrefix;
+  public void setShareUrl(String shareUrl) {
+    this.shareUrl = shareUrl;
   }
 }
