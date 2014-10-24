@@ -26,7 +26,7 @@
     "previewUrlPath" : "${serviceContextPath + previewUrlPath}",
   </#if>
   <#if shareUrlPath??>
-    "shareUrlPath" : "${shareUrlPrefix + shareUrlPath}",
+    "shareUrlPath" : "${shareUrl + shareUrlPath}",
   </#if>
 
   <#assign propNames = properties?keys>
