@@ -65,7 +65,7 @@
     <distributionManagement>
         <repository>
             <id>alfresco-indexer-release</id>
-            <url>dav:https://repository-maoo.forge.cloudbees.com/release/</url>
+            <url>dav:https://repository-apachemaoo.forge.cloudbees.com/alfresco-indexer/</url>
         </repository>
     </distributionManagement>
 
