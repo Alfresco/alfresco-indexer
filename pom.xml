@@ -13,10 +13,29 @@
         <version>2.0.0-beta-4</version>
     </parent>
 
+    <developers>
+      <developer>
+        <id>maoo</id>
+        <email>maoo@apache.org</email>
+      </developer>
+      <developer>
+        <id>rharo</id>
+        <email>rharo@apache.org</email>
+      </developer>
+    </developers>
+
     <properties>
         <alfresco.version>5.0.a</alfresco.version>
         <alfresco.data.location>target/alf_data_dev</alfresco.data.location>
     </properties>
+
+    <licenses>
+      <license>
+        <name>The Apache Software License, Version 2.0</name>
+        <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        <distribution>repo</distribution>
+      </license>
+    </licenses>
 
     <modules>
         <module>alfresco-indexer-webscripts</module>
