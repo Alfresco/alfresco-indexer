@@ -68,9 +68,9 @@ You can add dependency with the following Maven build items:
 Dependency
 ```
     <dependency>
-        <groupId>org.alfresco.consulting.indexer</groupId>
+        <groupId>com.github.maoo.indexer</groupId>
         <artifactId>alfresco-indexer-client</artifactId>
-        <version>0.6.3</version>
+        <version>0.6.7</version>
     </dependency>
 ```
 

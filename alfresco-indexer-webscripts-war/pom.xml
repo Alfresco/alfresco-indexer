@@ -6,7 +6,7 @@
     <name>Alfresco Indexer - Webscripts War</name>
 
     <parent>
-        <groupId>org.alfresco.consulting.indexer</groupId>
+        <groupId>com.github.maoo.indexer</groupId>
         <artifactId>alfresco-indexer-parent</artifactId>
         <version>0.6.7-SNAPSHOT</version>
     </parent>

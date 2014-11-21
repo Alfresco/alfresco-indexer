@@ -5,7 +5,7 @@
     <name>Alfresco Indexer - Client</name>
 
 	<parent>
-        <groupId>org.alfresco.consulting.indexer</groupId>
+        <groupId>com.github.maoo.indexer</groupId>
         <version>0.6.7-SNAPSHOT</version>
         <artifactId>alfresco-indexer-parent</artifactId>
     </parent>
