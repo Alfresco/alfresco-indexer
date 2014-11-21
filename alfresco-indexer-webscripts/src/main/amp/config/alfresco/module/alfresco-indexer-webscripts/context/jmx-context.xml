@@ -2,7 +2,7 @@
 <!DOCTYPE beans PUBLIC '-//SPRING//DTD BEAN//EN' 'http://www.springframework.org/dtd/spring-beans.dtd'>
 
 <beans>
-	<bean id="indexingServiceMBean" class="org.alfresco.consulting.indexer.dao.IndexingDaoJMX">
+	<bean id="indexingServiceMBean" class="com.github.maoo.indexer.dao.IndexingDaoJMX">
 		<property name="indexingDaoImpl" ref="indexingService" />
 	</bean>
 

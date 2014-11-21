@@ -61,7 +61,7 @@ Other examples of allowed types:
 
 Binaries
 ---
-Project binaries can be found at http://repository-maoo.forge.cloudbees.com/release/org/alfresco/consulting/indexer
+Project binaries can be found at http://repository-apachemaoo.forge.cloudbees.com/alfresco-indexer
 
 You can add dependency with the following Maven build items:
 
@@ -78,7 +78,7 @@ Repository
 ```
     <repository>
         <id>alfresco-indexer-release</id>
-        <url>dav:https://repository-maoo.forge.cloudbees.com/release/</url>
+        <url>https://repository-apachemaoo.forge.cloudbees.com/alfresco-indexer</url>
     </repository>
 
 ```

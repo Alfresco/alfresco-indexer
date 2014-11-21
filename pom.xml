@@ -5,7 +5,7 @@
     <groupId>com.github.maoo.indexer</groupId>
     <version>0.6.7-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>ManifoldCF - Integration - Indexer WebScript</name>
+    <name>Alfresco Indexer Parent</name>
 
     <parent>
         <groupId>org.alfresco.maven</groupId>

@@ -6,8 +6,8 @@
 
   <typeAliases>
     <!-- Alfresco indexer -->
-    <typeAlias alias="NodeIndex" type="org.alfresco.consulting.indexer.entities.NodeEntity"/>
-    <typeAlias alias="NodeIndexLoad" type="org.alfresco.consulting.indexer.entities.NodeBatchLoadEntity"/>
+    <typeAlias alias="NodeIndex" type="com.github.maoo.indexer.entities.NodeEntity"/>
+    <typeAlias alias="NodeIndexLoad" type="com.github.maoo.indexer.entities.NodeBatchLoadEntity"/>
 
   </typeAliases>
 

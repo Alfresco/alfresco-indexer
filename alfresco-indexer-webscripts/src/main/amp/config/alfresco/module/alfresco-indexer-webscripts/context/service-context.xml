@@ -27,7 +27,7 @@
   </bean>
 
   <bean id="indexingService"
-        class="org.alfresco.consulting.indexer.dao.IndexingDaoImpl">
+        class="com.github.maoo.indexer.dao.IndexingDaoImpl">
     <property name="sqlSessionTemplate" ref="indexingSqlSessionTemplate"/>
     <property name="serviceRegistry" ref="ServiceRegistry" />
     <property name="allowedTypes">
@@ -62,8 +62,8 @@
     </property>
   </bean>
 
-  <bean id="webscript.org.alfresco.consulting.indexer.webscripts.changes.get"
-        class="org.alfresco.consulting.indexer.webscripts.NodeChangesWebScript"
+  <bean id="webscript.com.github.maoo.indexer.webscripts.changes.get"
+        class="com.github.maoo.indexer.webscripts.NodeChangesWebScript"
         parent="webscript">
     <property name="namespaceService" ref="NamespaceService"/>
     <property name="qnameDao" ref="qnameDAO"/>
@@ -74,8 +74,8 @@
     <property name="maxNodesPerTxns" value="${indexer.changes.nodespertxn}"/>
   </bean>
   
-  <bean id="webscript.org.alfresco.consulting.indexer.webscripts.actions.get"
-        class="org.alfresco.consulting.indexer.webscripts.NodeActionsWebScript"
+  <bean id="webscript.com.github.maoo.indexer.webscripts.actions.get"
+        class="com.github.maoo.indexer.webscripts.NodeActionsWebScript"
         parent="webscript">
     <property name="namespaceService" ref="NamespaceService"/>
     <property name="qnameDao" ref="qnameDAO"/>
@@ -84,8 +84,8 @@
     <property name="propertiesUrlPrefix" value="${indexer.properties.url.prefix}"/>
   </bean>
 
-  <bean id="webscript.org.alfresco.consulting.indexer.webscripts.details.get"
-        class="org.alfresco.consulting.indexer.webscripts.NodeDetailsWebScript"
+  <bean id="webscript.com.github.maoo.indexer.webscripts.details.get"
+        class="com.github.maoo.indexer.webscripts.NodeDetailsWebScript"
         parent="webscript">
     <property name="dictionaryService" ref="DictionaryService"/>
     <property name="namespaceService" ref="NamespaceService"/>
@@ -96,8 +96,8 @@
     <property name="shareUrl" value="${indexer.share.url}"/>
   </bean>
 
-  <bean id="webscript.org.alfresco.consulting.indexer.webscripts.authresolve.get"
-        class="org.alfresco.consulting.indexer.webscripts.AuthorityResolverWebScript"
+  <bean id="webscript.com.github.maoo.indexer.webscripts.authresolve.get"
+        class="com.github.maoo.indexer.webscripts.AuthorityResolverWebScript"
         parent="webscript">
     <property name="authorityService" ref="AuthorityService"/>
     <property name="personService" ref="PersonService"/>
