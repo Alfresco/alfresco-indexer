@@ -83,9 +83,13 @@
 
     <distributionManagement>
         <repository>
-            <id>alfresco-indexer-release</id>
-            <url>dav:https://repository-apachemaoo.forge.cloudbees.com/alfresco-indexer/</url>
+            <id>oss-release</id>
+            <url>dav:https://oss.sonatype.org/content/repositories/snapshots</url>
         </repository>
+        <snapshotRepository>
+            <id>oss-snapshot</id>
+            <url>dav:https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+        </snapshotRepository>
     </distributionManagement>
 
     <profiles>

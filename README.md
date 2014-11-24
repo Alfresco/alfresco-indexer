@@ -61,7 +61,8 @@ Other examples of allowed types:
 
 Binaries
 ---
-Project binaries can be found at http://repository-apachemaoo.forge.cloudbees.com/alfresco-indexer
+
+Download snapshot and release artifacts from group https://oss.sonatype.org/content/groups/public
 
 You can add dependency with the following Maven build items:
 
@@ -70,17 +71,8 @@ Dependency
     <dependency>
         <groupId>com.github.maoo.indexer</groupId>
         <artifactId>alfresco-indexer-client</artifactId>
-        <version>0.6.7</version>
+        <version>0.6.8</version>
     </dependency>
-```
-
-Repository
-```
-    <repository>
-        <id>alfresco-indexer-release</id>
-        <url>https://repository-apachemaoo.forge.cloudbees.com/alfresco-indexer</url>
-    </repository>
-
 ```
 
 Disclaimer
