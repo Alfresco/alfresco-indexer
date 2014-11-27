@@ -106,24 +106,15 @@ Other examples of allowed types:
 
 Binaries
 ---
+Alfresco Indexer binaries can be found in [Maven Central](http://search.maven.org/#search%7Cga%7C1%7Calfresco-indexer); you can use Alfresco Indexer using Apache Maven, simply adding the following dependency in your pom.xml file:
 
-Download snapshot and release artifacts from group https://oss.sonatype.org/content/groups/public
-
-You can add dependency with the following Maven build items:
-
-Dependency
 ```
-    <dependency>
-        <groupId>com.github.maoo.indexer</groupId>
-        <artifactId>alfresco-indexer-client</artifactId>
-        <version>0.6.8</version>
-    </dependency>
+  <dependency>
+      <groupId>com.github.maoo.indexer</groupId>
+      <artifactId>alfresco-indexer-client</artifactId>
+      <version>0.7.0</version>
+  </dependency>
 ```
-
-Disclaimer
----
-* This project is NOT supported by Alfresco Support
-* This project is experimental, only few customers are starting to use it (mostly using the Alfresco ManifoldCF Connector)
 
 Credits
 ---
