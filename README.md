@@ -46,9 +46,8 @@ The software architecture of Alfresco Indexer is the same delivered by Alfresco-
 
 Nevertheless, the following differences can be noted:
 - Alfresco Indexer Webscripts are delivered by an AMP, they're not part of the core Alfresco code, as opposed to Alfresco Solr Integration
-- Alfresco Indexer Client is search-engine-agnostic, as opposed to SolrAPIClient (https://svn.alfresco.com/repos/alfresco-open-mirror/alfresco/HEAD/root/projects/solr-client/source/java/org/alfresco/solr/client/SOLRAPIClient.java) used by Alfresco-Solr integration
 - Alfresco Indexer is an unsupported, community, experimental effort; Alfresco Solr integration is stable and supported by Alfresco
-- Alfresco Indexer is agnostic to the Search Engine to adopt, as opposed to Alfresco-Solr integration; [Alfresco ManifoldCF Connector](http://svn.apache.org/repos/asf/manifoldcf/trunk/connectors/alfresco-webscript/) is a great example on how to use Alfresco with other Search Engines (i.e. Elasticsearch)
+- Alfresco Indexer is agnostic to the Search Engine to adopt, as opposed to [Alfresco-Solr integration](https://svn.alfresco.com/repos/alfresco-open-mirror/alfresco/HEAD/root/projects/solr-client/source/java/org/alfresco/solr/client/SOLRAPIClient.java); [Alfresco ManifoldCF Connector](http://svn.apache.org/repos/asf/manifoldcf/trunk/connectors/alfresco-webscript/) is a great example on how to use Alfresco with other Search Engines (i.e. Elasticsearch)
 - Alfresco-Solr integration maintains 2 isolated index structures for transactions and changesets; Alfresco-Indexer maintains 1 index structure with one index entry per Alfresco node, containing a list of readable authorities (`readablaAuthorities`); as a result:
   1. Alfresco-Solr integration is slower at query time, since document index entries must be cross-referenced with ACL index entries to understand which documents are accessible from the current user
   2. Alfresco Indexer triggers a reindexing of all nodes whose ACL change; a change to `/app:Company_Home` would trigger a full re-indexing; on the other hand, it doesn't need complex  query logic to implement authorisation query parsers for the Search Engine of your choice
