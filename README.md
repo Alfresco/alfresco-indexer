@@ -3,19 +3,67 @@ alfresco-indexer
 
 What is it?
 ---
-Alfresco Indexer is an Alfresco AMP that provides an HTTP endpoint to track Alfresco transactions and ACL changes; it aims to deliver a different (custom) way to index content hosted in Alfresco.
-Alfresco Indexer Client (sub-module) provides a Java-based client to reach the Alfresco endpoint.
+Alfresco Indexer is an API that allows to index content stored in Alfresco, when you want, how you want, selecting the content you're interested to.
 
-Alfresco Indexer WebScripts mimics the same behaviour of the built-in Solr API Webscripts (and Alfresco Solr CoreTracker), with one fundamental difference: this implementation delivers one single endpoint that returns one single list of nodeRefs, joining nodes that have been altered by transactions OR by ACL changesets; for each nodeRef returned, node properties, aspects and ACLs are indexed into one single (index) document
+Alfresco Indexer is composed by a server-side component (an [AMP](http://docs.alfresco.com/4.2/tasks/amp-install.html) that needs to be installed in Alfresco) called alfresco-indexer-webscripts and a Java client API - called alfresco-indexer-client - that publishes a [simple client interface](https://github.com/maoo/alfresco-indexer/blob/master/alfresco-indexer-client/src/main/java/com/github/maoo/indexer/client/AlfrescoClient.java) to interact with Alfresco contents; hereby the most important methods you get access to:
 
-- Pro: Simplified Search Index structure, it improves integration of Alfresco indexing with existing Search engines and index data structures
-- Pro: The authorization checks are implemented by query parsers by adding security constraints to a given query; there is no post-processing or data-joining activity involved during a query execution
-- Cons: If an ACL changes on a node, also all other nodes that inherit from it will be re-indexed, including node properties and content
-- Cons: Alfresco query parsers cannot be used with this solution, therefore Alfresco Share won't work out of the box
+```
+/**
+* Fetches nodes from Alfresco which has changed since the provided timestamp.
+*
+* @param lastAclChangesetId
+*         the id of the last ACL changeset already being indexed; it can be considered a "startFrom" param
+* @param lastTransactionId
+*         the id of the last transaction already being indexed; it can be considered a "startFrom" param
+* @return an {@link AlfrescoResponse}
+*/
+AlfrescoResponse fetchNodes(long lastTransactionId, long lastAclChangesetId, AlfrescoFilters filters) throws
+AlfrescoDownException;
+
+/**
+* Fetches Node Info from Alfresco for a given node.
+* @param nodeUuid the UUID for the node
+* @return an {@link AlfrescoResponse}
+* @throws AlfrescoDownException
+*/
+AlfrescoResponse fetchNode(String nodeUuid) throws AlfrescoDownException;
+
+/**
+* Fetches metadata from Alfresco for a given node.
+* @param nodeUuid
+*        the UUID for the node
+* @return a map with metadata created from a json object
+*/
+Map<String, Object> fetchMetadata(String nodeUuid) throws AlfrescoDownException;
+```
+
+Differences with Alfresco-Solr integration
+---
+
+The software architecture of Alfresco Indexer is the same delivered by Alfresco-Solr integration:
+- A collection of webscripts (accessible via /alfresco/api/solr/* endpoints) that allow to track transactions and acl change events on Alfresco side
+- A Java client that interacts with webscripts and updates Apache Solr indexes
+
+Nevertheless, the following differences can be noted:
+- Alfresco Indexer Webscripts are delivered by an AMP, they're not part of the core Alfresco code, as opposed to Alfresco Solr Integration
+- Alfresco Indexer Client is search-engine-agnostic, as opposed to SolrAPIClient (https://svn.alfresco.com/repos/alfresco-open-mirror/alfresco/HEAD/root/projects/solr-client/source/java/org/alfresco/solr/client/SOLRAPIClient.java) used by Alfresco-Solr integration
+- Alfresco Indexer is an unsupported, community, experimental effort; Alfresco Solr integration is stable and supported by Alfresco
+- Alfresco Indexer is agnostic to the Search Engine to adopt, as opposed to Alfresco-Solr integration; [Alfresco ManifoldCF Connector](http://svn.apache.org/repos/asf/manifoldcf/trunk/connectors/alfresco-webscript/) is a great example on how to use Alfresco with other Search Engines (i.e. Elasticsearch)
+- Alfresco-Solr integration maintains 2 isolated index structures for transactions and changesets; Alfresco-Indexer maintains 1 index structure with one index entry per Alfresco node, containing a list of readable authorities (`readablaAuthorities`); as a result:
+  1. Alfresco-Solr integration is slower at query time, since document index entries must be cross-referenced with ACL index entries to understand which documents are accessible from the current user
+  2. Alfresco Indexer triggers a reindexing of all nodes whose ACL change; a change to `/app:Company_Home` would trigger a full re-indexing; on the other hand, it doesn't need complex  query logic to implement authorisation query parsers for the Search Engine of your choice
+- Alfresco Indexer *does not* provide any Search Engine query parser, as opposed to Alfresco Solr integration, that delivers CMISQL, FTS and Lucene Query query predicates to implement advanced query capabilities; this makes Alfresco Indexer not suitable for any integration with Alfresco clients that rely on these search capabilities, such as Alfresco Share
+
+To summarise, advantages of using Alfresco Indexer:
+- Simplified Search Index structure, it improves integration of Alfresco indexing with existing Search engines and index data structures
+- The authorization checks are implemented by query parsers by adding security constraints to a given query; there is no post-processing or data-joining activity involved during a query execution
+
+Disadvantages of using Alfresco Indexer:
+- If an ACL changes on a node, also all other nodes that inherit from it will be re-indexed, including node properties and content
+- Alfresco query parsers cannot be used with this solution, therefore Alfresco Share won't work out of the box
 
 Project Structure
 ---
-
 - *Alfresco Indexer Webscripts* - An Alfresco Module Package (AMP) that exposes the set of Webscripts on Alfresco Repository (similar to Solr API Webscripts)
 - *Alfresco Indexer Client* - A Java API that wraps HTTP invocations to Alfresco Indexer Webscripts (similar to Alfresco Solr CoreTracker, the Alfresco API deployed into Apache Solr that invokes Alfresco Solr API against the repo and commits documents into Solr)
 
