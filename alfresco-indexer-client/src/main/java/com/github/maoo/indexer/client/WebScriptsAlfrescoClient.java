@@ -87,7 +87,7 @@ public class WebScriptsAlfrescoClient implements AlfrescoClient {
 //    uuidsUrl = String.format("%s://%s%s/node/uuids/%s/%s", protocol, hostname, endpoint, storeProtocol, storeId);
     actionsUrl = String.format("%s://%s%s/node/actions/%s/%s", protocol, hostname, endpoint, storeProtocol, storeId);
     metadataUrl = String.format("%s://%s%s/node/details/%s/%s", protocol, hostname, endpoint, storeProtocol, storeId);
-    authoritiesUrl = String.format("%s://%s%s/api/node/auth/resolve/", protocol, hostname, endpoint);
+    authoritiesUrl = String.format("%s://%s%s/auth/resolve/", protocol, hostname, endpoint);
     this.username = username;
     this.password = password;
   }
