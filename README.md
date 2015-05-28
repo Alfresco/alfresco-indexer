@@ -127,7 +127,7 @@ If everything goes fine, make sure you're up-to-date with git master and run the
 git status
 mvn release:prepare release:perform
 ```
-You will be frequently asked to `Enter passphrase:`
+Follow [sonatype docs](http://central.sonatype.org/pages/apache-maven.html) for setting up your environment.
 
 Credits
 ---
