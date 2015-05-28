@@ -58,7 +58,7 @@ public class AlfrescoClientTest {
       lastAclChangesetParam + "=[0-9]+";
   private final String metadataEndpoint = "/alfresco/service/node/details/" + STORE_PROTOCOL + "/" +
       STORE_ID + "/";
-  private final String authoritiesEndpoint = "/alfresco/service/api/node/auth/resolve/";
+  private final String authoritiesEndpoint = "/alfresco/service/auth/resolve/";
 
   @Rule
   public WireMockRule wireMockRule = new WireMockRule(8089);
