@@ -116,6 +116,19 @@ Alfresco Indexer binaries can be found in [Maven Central](http://search.maven.or
   </dependency>
 ```
 
+Release
+---
+Before releasing, make sure you can upload artifacts to Maven Central:
+```
+mvn deploy -Pgpg
+```
+If everything goes fine, make sure you're up-to-date with git master and run the release command:
+```
+git status
+mvn release:prepare release:perform
+```
+You will be frequently asked to `Enter passphrase:`
+
 Credits
 ---
 This project was have been developed by

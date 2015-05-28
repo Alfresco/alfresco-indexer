@@ -284,8 +284,14 @@ private HttpGet createGetRequest(String url) {
 
   private AlfrescoUser userFromHttpEntity(HttpEntity entity) throws IOException {
     Reader entityReader = new InputStreamReader(entity.getContent());
-    JsonObject responseObject = gson.fromJson(entityReader, JsonObject.class);
-    return getUser(responseObject);
+    JsonElement responseObject = gson.fromJson(entityReader, JsonElement.class);
+    if (responseObject instanceof JsonObject) {
+      return getUser((JsonObject)responseObject);
+    } else if (responseObject instanceof JsonArray) {
+      return getUser(((JsonArray)responseObject).get(0).getAsJsonObject());
+    } else {
+      return getUser(responseObject.getAsJsonObject());
+    }
   }
 
   private AlfrescoUser getUser(JsonObject responseObject) {

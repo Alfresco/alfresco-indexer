@@ -1,9 +1,6 @@
 package com.github.maoo.indexer;
 
-import com.github.maoo.indexer.client.AlfrescoClient;
-import com.github.maoo.indexer.client.AlfrescoFilters;
-import com.github.maoo.indexer.client.AlfrescoResponse;
-import com.github.maoo.indexer.client.WebScriptsAlfrescoClient;
+import com.github.maoo.indexer.client.*;
 import org.junit.Test;
 
 import java.text.SimpleDateFormat;
@@ -18,6 +15,23 @@ public class AlfrescoIndexerIT {
   private static SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHss");
 
   @Test
+  public void testAuth() {
+    AlfrescoClient client = new WebScriptsAlfrescoClient(
+        "http", "localhost:8080",
+        "/alfresco/service",
+        "workspace",
+        "SpacesStore",
+        "admin", "admin");
+    AlfrescoUser user = client.fetchUserAuthorities("admin");
+    assertNotNull(user);
+    assertNotEquals(0,user.getAuthorities().size());
+
+    // TODO - remove it
+    System.out.println("Authority List");
+    System.out.println(user.getAuthorities());
+  }
+
+    @Test
   public void fetchNodes() {
     AlfrescoClient client = new WebScriptsAlfrescoClient(
         "http", "localhost:8080",
@@ -30,7 +44,7 @@ public class AlfrescoIndexerIT {
     //Fetching all Alfresco nodes that have (ever) changed, expecting 65 results
     AlfrescoResponse response = client.fetchNodes(0, 0, new AlfrescoFilters());
     List<Map<String, Object>> list = response.getDocumentList();
-    assertEquals(65, list.size());
+    assertNotEquals(0, list.size());
 
     //Checking results
     assertEquals("SpacesStore", response.getStoreId());
