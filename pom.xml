@@ -10,7 +10,7 @@
     <parent>
         <groupId>org.alfresco.maven</groupId>
         <artifactId>alfresco-sdk-parent</artifactId>
-        <version>2.0.0-beta-4</version>
+        <version>2.1.1</version>
     </parent>
 
     <developers>
@@ -25,7 +25,7 @@
     </developers>
 
     <properties>
-        <alfresco.version>5.0.a</alfresco.version>
+        <alfresco.version>5.0</alfresco.version>
         <alfresco.data.location>target/alf_data_dev</alfresco.data.location>
     </properties>
 
