@@ -20,10 +20,10 @@
     "contentUrlPath" : "${serviceContextPath + contentUrlPath}",
   </#if>
   <#if thumbnailUrlPath??>
-    "thumbnailUrlPath" : "${serviceContextPath + thumbnailUrlPath}",
+    "thumbnailUrlPath" : "${thumbnailUrlPrefix + thumbnailUrlPath}",
   </#if>
   <#if previewUrlPath??>
-    "previewUrlPath" : "${serviceContextPath + previewUrlPath}",
+    "previewUrlPath" : "${previewUrlPrefix + previewUrlPath}",
   </#if>
   <#if shareUrlPath??>
     "shareUrlPath" : "${shareUrl + shareUrlPath}",

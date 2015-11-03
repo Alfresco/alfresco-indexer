@@ -86,7 +86,7 @@ public class IndexingDaoImpl
         nodeLoadEntity.setAspects(this.aspects);
         nodeLoadEntity.setMimeTypes(this.mimeTypes);
 
-        return filterNodes((List<NodeEntity>) template.selectList(SELECT_NODES_BY_ACLS, nodeLoadEntity, new RowBounds(0,
+        return filterNodes((List<NodeEntity>) (List<?>)template.selectList(SELECT_NODES_BY_ACLS, nodeLoadEntity, new RowBounds(0,
                 Integer.MAX_VALUE)));
     }
 
@@ -113,7 +113,7 @@ public class IndexingDaoImpl
         nodeLoadEntity.setAspects(this.aspects);
         nodeLoadEntity.setMimeTypes(this.mimeTypes);
 
-        return filterNodes((List<NodeEntity>) template.selectList(SELECT_NODES_BY_TXNS, nodeLoadEntity, new RowBounds(0,
+        return filterNodes((List<NodeEntity>) (List<?>) template.selectList(SELECT_NODES_BY_TXNS, nodeLoadEntity, new RowBounds(0,
                 Integer.MAX_VALUE)));
     }
 
