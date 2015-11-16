@@ -6,7 +6,9 @@
         
         <#assign suffix="/"+storeProtocol+"/"+storeId+"/"+node.uuid >
         <#assign nodeRef=storeProtocol+"://"+storeId+"/"+node.uuid >
-        "name" : "${node.name}",
+         <#if node.name??>
+        	"name" : "${node.name}",
+        </#if>
         "propertiesUrl" : "${propertiesUrlPrefix + suffix}",
         "uuid" : "${node.uuid}",
         "nodeRef": "${nodeRef}",
