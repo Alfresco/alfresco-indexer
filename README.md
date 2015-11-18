@@ -5,6 +5,17 @@ What is it?
 ---
 Alfresco Indexer is an API that allows to index content stored in Alfresco, when you want, how you want, selecting the content you're interested to.
 
+Run
+---
+```
+cd alfresco-indexer-webscripts
+mvn integration-test -Pamp-to-war
+```
+To reset DB and contentstore
+```
+mvn integration-test -Pamp-to-war,purge
+```
+
 Project Structure
 ---
 - *Alfresco Indexer Webscripts* - A server-side component (an [AMP](http://docs.alfresco.com/4.2/tasks/amp-install.html) that needs to be installed in Alfresco) that exposes a set of Webscripts on Alfresco Repository

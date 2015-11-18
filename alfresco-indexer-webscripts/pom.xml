@@ -38,7 +38,7 @@
 			<artifactId>cxf-api</artifactId>
 			<version>2.7.18</version>
 		</dependency>
-        
+
         <!-- Test dependencies -->
         <dependency>
             <groupId>${alfresco.groupId}</groupId>

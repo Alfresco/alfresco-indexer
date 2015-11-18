@@ -23,11 +23,11 @@
             <artifactId>h2</artifactId>
             <version>${h2.version}</version>
         </dependency>
-        <dependency>
+        <!-- <dependency>
             <groupId>tk.skuro.alfresco</groupId>
             <artifactId>h2-support</artifactId>
             <version>${h2-support.version}</version>
-        </dependency>
+        </dependency> -->
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>alfresco-indexer-webscripts</artifactId>
