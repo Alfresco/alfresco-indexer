@@ -35,6 +35,12 @@ cd manifoldcf
 ant make-deps
 ant build
 mvn install -DskipTests -Dmaven.test.skip=true
+
+# Copy connectors
+cp connectors/solr/target/mcf-solr-connector-2.3-SNAPSHOT.jar dist/connector-lib
+cp connectors/alfresco-webscript/target/mcf-alfresco-webscript-connector-2.3-SNAPSHOT.jar dist/connector-lib
+cp ~/alfresco-indexer/alfresco-indexer-client/target/alfresco-indexer-client.jar dist/connector-lib
+
 cd connectors/alfresco-webscripts
 mvn package
 ```
