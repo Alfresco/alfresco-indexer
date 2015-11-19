@@ -26,6 +26,7 @@
 
     <properties>
         <alfresco.version>5.0.d</alfresco.version>
+        <alfresco.enterprise.version>5.0.2</alfresco.enterprise.version>
     </properties>
 
     <licenses>
@@ -108,7 +109,7 @@
       <profile>
           <id>enterprise</id>
           <properties>
-              <alfresco.version>5.0.2</alfresco.version>
+              <alfresco.version>${alfresco.enterprise.version}</alfresco.version>
           </properties>
           <repositories>
               <repository>
