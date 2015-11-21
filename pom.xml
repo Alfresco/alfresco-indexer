@@ -27,6 +27,7 @@
     <properties>
         <alfresco.version>5.0.d</alfresco.version>
         <alfresco.enterprise.version>5.0.2</alfresco.enterprise.version>
+        <h2-support.version>5.0</h2-support.version>
     </properties>
 
     <licenses>

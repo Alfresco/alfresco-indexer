@@ -42,8 +42,16 @@ mvn install -DskipTests -Dmaven.test.skip=true
 rm -rf dist/connector-lib/alfresco-indexer*
 cp ~/alfresco-indexer/alfresco-indexer-client/target/alfresco-indexer-client.jar dist/connector-lib
 
+
 cd connectors/alfresco-webscripts
 mvn package
+```
+
+### Test Alfresco Webscripts Manifold Connector
+```
+cd manifoldcf/connectors/alfresco-webscripts
+# [change pom.xml with <alfresco.indexer.version>0.7.2-SNAPSHOT</alfresco.indexer.version>]
+mvn clean integration-test
 ```
 
 ### Run Apache manifoldCF
