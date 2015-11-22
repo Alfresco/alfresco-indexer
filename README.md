@@ -5,16 +5,24 @@ What is it?
 ---
 Alfresco Indexer is an API that allows to index content stored in Alfresco, when you want, how you want, selecting the content you're interested to.
 
-Run
+Compatibility Matrix
+---
+
+| Alfresco Indexer version | (shipped with) ManifoldCF version | (tested wth) Alfresco edition/version |
+| ------------- |:-------------:| -----:|
+| 0.7.x | 1.8.0 to 2.2.0-RC0 | Community 5.0.[a,b,c,d], Enterprise 4.2.x |
+| 0.8.x | trunk (master) - WIP | Enterprise 5.0.x |
+
+Community 5.1.[a,b,c]-EA is work in progress (add issue link)
+
+Run Tests
 ---
 ```
-cd alfresco-indexer-webscripts
-mvn integration-test -Pamp-to-war
+cd alfresco-indexer-webscripts-war
+mvn clean integration-test
 ```
-To reset DB and contentstore
-```
-mvn integration-test -Pamp-to-war,purge
-```
+
+To know how to build the master and test it against ManifoldCF, follow [these instructions](MANIFOLD.md)
 
 Project Structure
 ---
