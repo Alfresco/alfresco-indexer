@@ -19,6 +19,8 @@ There may be other permutations that work but haven't been tested.
 Run Tests
 ---
 ```
+git clone git@github.com:maoo/alfresco-indexer.git
+mvn clean install -DskipTests
 cd alfresco-indexer-webscripts-war
 mvn clean integration-test
 ```
