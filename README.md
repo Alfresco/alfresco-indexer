@@ -132,7 +132,7 @@ Alfresco Indexer binaries can be found in [Maven Central](http://search.maven.or
   <dependency>
       <groupId>com.github.maoo.indexer</groupId>
       <artifactId>alfresco-indexer-client</artifactId>
-      <version>0.7.0</version>
+      <version>0.8.0</version>
   </dependency>
 ```
 
