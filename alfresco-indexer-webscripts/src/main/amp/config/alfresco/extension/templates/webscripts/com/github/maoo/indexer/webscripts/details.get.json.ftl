@@ -7,7 +7,7 @@
     </#list>
   ],
   "path" : "${path}",
-  "documentUrl" : "${serviceContextPath + documentUrlPrefix + documentUrlPath}",
+  "documentUrl" : "${documentUrlPrefix + documentUrlPath}",
 
   <#if mimetype??>
     "mimetype" : "${mimetype}",

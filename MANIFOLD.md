@@ -1,4 +1,4 @@
-Testing against Manifold master
+Try alfresco-indexer (master) with Apache ManifoldCF
 ---
 
 There are few steps to perform in order to test a local build of alfresco-indexer against Manifold master version.
@@ -9,7 +9,7 @@ git clone git@github.com:maoo/alfresco-indexer.git
 cd alfresco-indexer
 mvn clean install -DskipTests
 ```
-Tests are currently failing due to a new SDK version being used; will be fixed ASAP
+Tests (of alfresco-indexer-webscripts module only) are currently failing due to a new SDK version being used; will be fixed ASAP.
 
 ### Test alfresco-indexer
 This local installation will include alfresco-indexer-webscripts AMP
@@ -28,7 +28,7 @@ The same approach applies for next steps.
 This local installation will include alfresco-indexer-webscripts AMP
 ```
 cd alfresco-indexer/alfresco-indexer-webscripts
-mvn package -Pamp-to-war,purge
+mvn clean install -Pamp-to-war,purge
 ```
 
 ### Download/run a local Apache Solr
@@ -54,19 +54,16 @@ mvn install -DskipTests -Dmaven.test.skip=true
 
 rm -rf dist/connector-lib/alfresco-indexer*
 cp ~/alfresco-indexer/alfresco-indexer-client/target/alfresco-indexer-client.jar dist/connector-lib
-
-
-cd connectors/alfresco-webscripts
-mvn package
 ```
 You can perform the same steps on ManifoldCF SVN trunk.
 
 ### Test Alfresco Webscripts Manifold Connector
 ```
-cd manifoldcf/connectors/alfresco-webscripts
+cd manifoldcf/connectors/alfresco-webscript
 # [change pom.xml with <alfresco.indexer.version>0.8.1-SNAPSHOT</alfresco.indexer.version>]
 mvn clean integration-test
 ```
+Replace `0.8.1-SNAPSHOT` with the version of alfresco-indexer you built in the steps above.
 
 ### Run Apache manifoldCF
 ```

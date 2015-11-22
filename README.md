@@ -11,9 +11,10 @@ Compatibility Matrix
 | Alfresco Indexer version | (shipped with) ManifoldCF version | (tested wth) Alfresco edition/version |
 | ------------- |:-------------:| -----:|
 | 0.7.x | 1.8.0 to 2.2.0-RC0 | Community 5.0.[a,b,c,d], Enterprise 4.2.x |
-| 0.8.x | trunk (master) - WIP | Enterprise 5.0.x |
+| 0.8.x | trunk (master) - WIP | Community 5.0.d, Enterprise 5.0.x |
 
 Community 5.1.[a,b,c]-EA is work in progress (add issue link)
+There may be other permutations that work but haven't been tested.
 
 Run Tests
 ---
