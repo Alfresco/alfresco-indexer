@@ -74,6 +74,7 @@ public class NodeDetailsWebScript extends DeclarativeWebScript {
 
 	protected static final Log logger = LogFactory.getLog(NodeDetailsWebScript.class);
 	protected static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+	private static final String BASE_READ_PERMISSIONS = "ReadPermissions";
 
 	@Override
 	protected Map<String, Object> executeImpl(WebScriptRequest req, Status status, Cache cache) {
@@ -120,7 +121,7 @@ public class NodeDetailsWebScript extends DeclarativeWebScript {
 		for (Acl acl : acls) {
 			List<AccessControlEntry> aces = aclDao.getAccessControlList(acl.getId()).getEntries();
 			for (AccessControlEntry ace : aces) {
-				if (ace.getAccessStatus().equals(AccessStatus.ALLOWED)) {
+				if ((!ace.getPermission().getName().equals(BASE_READ_PERMISSIONS)) && ace.getAccessStatus().equals(AccessStatus.ALLOWED)) {
 					if (!readableAuthorities.contains(ace.getAuthority())) {
 						readableAuthorities.add(ace.getAuthority());
 					}
