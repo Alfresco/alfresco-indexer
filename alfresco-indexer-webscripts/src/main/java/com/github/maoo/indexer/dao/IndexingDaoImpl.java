@@ -26,6 +26,8 @@ import java.util.Set;
 import com.github.maoo.indexer.entities.NodeBatchLoadEntity;
 import com.github.maoo.indexer.entities.NodeEntity;
 import com.github.maoo.indexer.utils.Utils;
+
+import org.alfresco.model.ContentModel;
 import org.alfresco.service.ServiceRegistry;
 import org.alfresco.service.cmr.repository.NodeRef;
 import org.alfresco.service.cmr.repository.NodeService;
@@ -86,7 +88,7 @@ public class IndexingDaoImpl
         nodeLoadEntity.setAspects(this.aspects);
         nodeLoadEntity.setMimeTypes(this.mimeTypes);
 
-        return filterNodes((List<NodeEntity>) template.selectList(SELECT_NODES_BY_ACLS, nodeLoadEntity, new RowBounds(0,
+        return filterNodes((List<NodeEntity>) (List<?>)template.selectList(SELECT_NODES_BY_ACLS, nodeLoadEntity, new RowBounds(0,
                 Integer.MAX_VALUE)));
     }
 
@@ -113,7 +115,7 @@ public class IndexingDaoImpl
         nodeLoadEntity.setAspects(this.aspects);
         nodeLoadEntity.setMimeTypes(this.mimeTypes);
 
-        return filterNodes((List<NodeEntity>) template.selectList(SELECT_NODES_BY_TXNS, nodeLoadEntity, new RowBounds(0,
+        return filterNodes((List<NodeEntity>) (List<?>) template.selectList(SELECT_NODES_BY_TXNS, nodeLoadEntity, new RowBounds(0,
                 Integer.MAX_VALUE)));
     }
 
@@ -180,6 +182,7 @@ public class IndexingDaoImpl
                 
                boolean shouldBeAdded=true;
                NodeRef nodeRef= new NodeRef(node.getStore().getStoreRef(),node.getUuid());
+               String nodeType="{"+node.getTypeNamespace()+"}"+node.getTypeName();
                     
                if(nodeService.exists(nodeRef)){
                     
@@ -214,10 +217,14 @@ public class IndexingDaoImpl
                         }
                     }
                     
-                    if(shouldBeAdded){
-                        filteredNodes.add(node);
-                    }
+                    
                 }
+               else if(nodeType.equals(ContentModel.TYPE_DELETED.toString())){
+                   shouldBeAdded=Boolean.TRUE;
+               }
+               if(shouldBeAdded){
+                   filteredNodes.add(node);
+               }
             }
         }else{
             filteredNodes=nodes;
@@ -252,6 +259,7 @@ public class IndexingDaoImpl
     public void setAllowedTypes(Set<String> allowedTypes)
     {
         this.allowedTypes = allowedTypes;
+        this.allowedTypes.add(ContentModel.TYPE_DELETED.toString());
     }
 
     public Set<String> getAllowedTypes()

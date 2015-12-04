@@ -51,217 +51,227 @@ import org.springframework.extensions.webscripts.WebScriptRequest;
 import com.google.gdata.util.common.base.StringUtil;
 
 /**
- * Given a nodeRef, renders out all data about a node (except binary content):
- * - Node metadata
- * - Node ACLs
+ * Given a nodeRef, renders out all data about a node (except binary content): -
+ * Node metadata - Node ACLs
  *
- * Please check src/main/amp/config/alfresco/extension/templates/webscripts/com/github/maoo/indexer/webscripts/details.get.desc.xml
- * to know more about the RestFul interface to invoke the WebScript
+ * Please check
+ * src/main/amp/config/alfresco/extension/templates/webscripts/com/github/maoo/
+ * indexer/webscripts/details.get.desc.xml to know more about the RestFul
+ * interface to invoke the WebScript
  *
- * List of pending activities (or TODOs)
- * - Refactor recursive getAllAcls (direct recursion) . Evaluate the possibility to write a SQL statement for that
- * - Move private/static logic into the IndexingService (see notes on NodeChangesWebScript)
- * - Move the following methods (and related SQL statements) into IndexingDaoImpl
- * -- nodeService.getProperties
- * -- nodeService.getAspects
- * -- nodeDao.getNodeAclId
- * -- solrDao.getNodesByAclChangesetId
- * -- nodeService.getType and dictionaryService.isSubClass (should be merged into one)
- * - Using JSON libraries (or StringBuffer), render out the payload without passing through FreeMarker template
+ * List of pending activities (or TODOs) - Refactor recursive getAllAcls (direct
+ * recursion) . Evaluate the possibility to write a SQL statement for that -
+ * Move private/static logic into the IndexingService (see notes on
+ * NodeChangesWebScript) - Move the following methods (and related SQL
+ * statements) into IndexingDaoImpl -- nodeService.getProperties --
+ * nodeService.getAspects -- nodeDao.getNodeAclId --
+ * solrDao.getNodesByAclChangesetId -- nodeService.getType and
+ * dictionaryService.isSubClass (should be merged into one) - Using JSON
+ * libraries (or StringBuffer), render out the payload without passing through
+ * FreeMarker template
  */
 public class NodeDetailsWebScript extends DeclarativeWebScript {
 
-  protected static final Log logger = LogFactory.getLog(NodeDetailsWebScript.class);
-  protected static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+	protected static final Log logger = LogFactory.getLog(NodeDetailsWebScript.class);
+	protected static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 
-  @Override
-  protected Map<String, Object> executeImpl(WebScriptRequest req, Status status, Cache cache) {
+	@Override
+	protected Map<String, Object> executeImpl(WebScriptRequest req, Status status, Cache cache) {
 
-    final String serviceContextPath = req.getServerPath()+req.getServiceContextPath();
+		final String serviceContextPath = req.getServerPath() + req.getServiceContextPath();
 
-    final List<String> readableAuthorities = new ArrayList<String>();
+		final List<String> readableAuthorities = new ArrayList<String>();
 
-    //Parsing parameters passed from the WebScript invocation
-    Map<String, String> templateArgs = req.getServiceMatch().getTemplateVars();
-    String storeId = templateArgs.get("storeId");
-    String storeProtocol = templateArgs.get("storeProtocol");
-    String uuid = templateArgs.get("uuid");
-    NodeRef nodeRef = new NodeRef(storeProtocol, storeId, uuid);
-    logger.debug(String.format("Invoking ACLs Webscript, using the following params\n" +
-        "nodeRef: %s\n", nodeRef));
+		// Parsing parameters passed from the WebScript invocation
+		Map<String, String> templateArgs = req.getServiceMatch().getTemplateVars();
+		String storeId = templateArgs.get("storeId");
+		String storeProtocol = templateArgs.get("storeProtocol");
+		String uuid = templateArgs.get("uuid");
+		NodeRef nodeRef = new NodeRef(storeProtocol, storeId, uuid);
+		logger.debug(String.format("Invoking ACLs Webscript, using the following params\n" + "nodeRef: %s\n", nodeRef));
 
-    //Processing properties
-    Map<QName,Serializable> propertyMap = nodeService.getProperties(nodeRef);
-    Map<String,Pair<String,String>> properties = toStringMap(propertyMap);
+		// Processing properties
+		Map<QName, Serializable> propertyMap = nodeService.getProperties(nodeRef);
+		Map<String, Pair<String, String>> properties = toStringMap(propertyMap);
 
-    //Processing aspects
-    Set<QName> aspectsSet = nodeService.getAspects(nodeRef);
-    Set<String> aspects = toStringSet(aspectsSet);
+		// Processing aspects
+		Set<QName> aspectsSet = nodeService.getAspects(nodeRef);
+		Set<String> aspects = toStringSet(aspectsSet);
 
-    //Processing content data
-    ContentData contentData = (ContentData)propertyMap.get(ContentModel.PROP_CONTENT);
+		// Processing content data
+		ContentData contentData = (ContentData) propertyMap.get(ContentModel.PROP_CONTENT);
 
-      //Get the node ACL Id
-    Long dbId = (Long)propertyMap.get(ContentModel.PROP_NODE_DBID);
-    Long nodeAclId = nodeDao.getNodeAclId(dbId);
+		// Get the node ACL Id
+		Long dbId = (Long) propertyMap.get(ContentModel.PROP_NODE_DBID);
+		Long nodeAclId = nodeDao.getNodeAclId(dbId);
 
-    //Get also the inherited ones
-    List<Acl> acls = getAllAcls(nodeAclId);
-    //@TODO - avoid reverse by implementing direct recursion
-    Collections.reverse(acls);
+		// Get also the inherited ones
+		List<Acl> acls = getAllAcls(nodeAclId);
+		// @TODO - avoid reverse by implementing direct recursion
+		Collections.reverse(acls);
 
-    //Getting path and siteName
-    Path pathObj = nodeService.getPath(nodeRef);
-    String path = pathObj.toPrefixString(namespaceService);
-    String siteName = Utils.getSiteName(pathObj);
+		// Getting path and siteName
+		Path pathObj = nodeService.getPath(nodeRef);
+		String path = pathObj.toPrefixString(namespaceService);
+		String siteName = Utils.getSiteName(pathObj);
 
-    //Walk through ACLs and related ACEs, rendering out authority names having a granted permission on the node
-    for (Acl acl : acls) {
-      List<AccessControlEntry> aces = aclDao.getAccessControlList(acl.getId()).getEntries();
-      for(AccessControlEntry ace : aces) {
-        if (ace.getAccessStatus().equals(AccessStatus.ALLOWED)) {
-          if (!readableAuthorities.contains(ace.getAuthority())) {
-            readableAuthorities.add(ace.getAuthority());
-          }
-        }
-      }
-    }
+		// Walk through ACLs and related ACEs, rendering out authority names
+		// having a granted permission on the node
+		for (Acl acl : acls) {
+			List<AccessControlEntry> aces = aclDao.getAccessControlList(acl.getId()).getEntries();
+			for (AccessControlEntry ace : aces) {
+				if (ace.getAccessStatus().equals(AccessStatus.ALLOWED)) {
+					if (!readableAuthorities.contains(ace.getAuthority())) {
+						readableAuthorities.add(ace.getAuthority());
+					}
+				}
+			}
+		}
 
-    Map<String, Object> model = new HashMap<String, Object>(1, 1.0f);
-    if (contentData != null) {
-      model.put("mimetype", contentData.getMimetype());
-      model.put("size", contentData.getSize());
-    }
+		Map<String, Object> model = new HashMap<String, Object>(1, 1.0f);
+		if (contentData != null) {
+			model.put("mimetype", contentData.getMimetype());
+			model.put("size", contentData.getSize());
+		}
 
-    model.put("nsResolver", namespaceService);
-    model.put("readableAuthorities", readableAuthorities);
-    model.put("properties", properties);
-    model.put("aspects", aspects);
-    model.put("path", path);
-    model.put("serviceContextPath", serviceContextPath);
-    model.put("documentUrlPrefix", documentUrlPrefix);
-    model.put("shareUrl", shareUrl);
+		model.put("nsResolver", namespaceService);
+		model.put("readableAuthorities", readableAuthorities);
+		model.put("properties", properties);
+		model.put("aspects", aspects);
+		model.put("path", path);
+		model.put("serviceContextPath", serviceContextPath);
+		model.put("documentUrlPrefix", documentUrlPrefix);
+		model.put("shareUrl", shareUrl);
+        model.put("thumbnailUrlPrefix", thumbnailUrlPrefix);
+        model.put("previewUrlPrefix", previewUrlPrefix);
 
-    String documentUrlPath = String.format("/%s/%s/%s",storeProtocol,storeId,uuid);
-    model.put("documentUrlPath", documentUrlPath);
+		String documentUrlPath = String.format("/%s/%s/%s", storeProtocol, storeId, uuid);
+		model.put("documentUrlPath", documentUrlPath);
 
-    //Calculating the contentUrlPath and adding it only if the contentType is child of cm:content
-    boolean isContentAware = isContentAware(nodeRef);
-    if (isContentAware) {
-      String contentUrlPath = String.format("/api/node/%s/%s/%s/content",storeProtocol,storeId,uuid);
-      model.put("contentUrlPath", contentUrlPath);
+		// Calculating the contentUrlPath and adding it only if the contentType
+		// is child of cm:content
+		boolean isContentAware = isContentAware(nodeRef);
+		if (isContentAware) {
+			String contentUrlPath = String.format("/api/node/%s/%s/%s/content", storeProtocol, storeId, uuid);
+			model.put("contentUrlPath", contentUrlPath);
 
-      //Rendering out the (relative) URL path to Alfresco Share
-      String shareUrlPath = null;
-      
-      if (!StringUtil.isEmpty(siteName)) {
-          shareUrlPath = String.format(
-            "/page/site/%s/document-details?nodeRef=%s",
-            siteName,
-            nodeRef.toString());
-       
-      }else{
-          shareUrlPath = String.format(
-                  "/page/document-details?nodeRef=%s",
-                  nodeRef.toString());
-      }
-      
-      if(shareUrlPath!=null){
-          model.put("shareUrlPath", shareUrlPath);
-      }
-    }
+			// Rendering out the (relative) URL path to Alfresco Share
+			String shareUrlPath = null;
 
-    String thumbnailUrlPath = String.format(
-        "/api/node/%s/%s/%s/content/thumbnails/doclib?c=queue&ph=true&lastModified=1",
-        storeProtocol,
-        storeId,
-        uuid);
-    model.put("thumbnailUrlPath", thumbnailUrlPath);
+			if (!StringUtil.isEmpty(siteName)) {
+				shareUrlPath = String.format("/page/site/%s/document-details?nodeRef=%s", siteName, nodeRef.toString());
 
-    String previewUrlPath = String.format(
-        "/api/node/%s/%s/%s/content/thumbnails/webpreview",
-        storeProtocol,
-        storeId,
-        uuid);
-    model.put("previewUrlPath", previewUrlPath);
+			} else {
+				shareUrlPath = String.format("/page/document-details?nodeRef=%s", nodeRef.toString());
+			}
 
+			if (shareUrlPath != null) {
+				model.put("shareUrlPath", shareUrlPath);
+			}
+		}
 
-    return model;
-  }
+		String thumbnailUrlPath = String.format(
+				"/api/node/%s/%s/%s/content/thumbnails/doclib?c=queue&ph=true&lastModified=1", storeProtocol, storeId,
+				uuid);
+		model.put("thumbnailUrlPath", thumbnailUrlPath);
 
-  private boolean isContentAware(NodeRef nodeRef) {
-    QName contentType = nodeService.getType(nodeRef);
-    return dictionaryService.isSubClass(contentType, ContentModel.TYPE_CONTENT);
-  }
+		String previewUrlPath = String.format("/api/node/%s/%s/%s/content/thumbnails/webpreview", storeProtocol,
+				storeId, uuid);
+		model.put("previewUrlPath", previewUrlPath);
 
-  private Set<String> toStringSet(Set<QName> aspectsSet) {
-    Set<String> ret = new HashSet<String>();
-    for(QName aspect : aspectsSet) {
-      ret.add(aspect.toPrefixString(namespaceService));
-    }
-    return ret;
-  }
+		return model;
+	}
 
-  private Map<String, Pair<String, String>> toStringMap(Map<QName, Serializable> propertyMap) {
-    Map<String, Pair<String, String>> ret = new HashMap<String, Pair<String, String>>(1,1.0f);
-    for(QName propertyName : propertyMap.keySet()) {
-      Serializable propertyValue = propertyMap.get(propertyName);
-      if (propertyValue != null) {
-        String propertyType = propertyValue.getClass().getName();
-        String stringValue = propertyValue.toString();
-        if (propertyType.equals("java.util.Date")) {
-          stringValue = sdf.format(propertyValue);
-        }
-        ret.put(propertyName.toPrefixString(namespaceService), new Pair<String, String>(propertyType,stringValue));
-      }
-    }
-    return ret;
-  }
+	private boolean isContentAware(NodeRef nodeRef) {
+		QName contentType = nodeService.getType(nodeRef);
+		return dictionaryService.isSubClass(contentType, ContentModel.TYPE_CONTENT);
+	}
 
-  private List<Acl> getAllAcls(Long nodeAclId) {
-    logger.debug("getAllAcls from "+nodeAclId);
-    Acl acl = aclDao.getAcl(nodeAclId);
-    Long parentNodeAclId = acl.getInheritsFrom();
-    logger.debug("parent acl is  "+parentNodeAclId);
-    if (parentNodeAclId == null || !acl.getInherits()) {
-      List<Acl> ret = new ArrayList<Acl>();
-      ret.add(acl);
-      return ret;
-    } else {
-      List<Acl> inheritedAcls = getAllAcls(parentNodeAclId);
-      logger.debug("Current acl with id "+nodeAclId+" is "+acl);
-      inheritedAcls.add(acl);
-      return inheritedAcls;
-    }
-  }
+	private Set<String> toStringSet(Set<QName> aspectsSet) {
+		Set<String> ret = new HashSet<String>();
+		for (QName aspect : aspectsSet) {
+			ret.add(aspect.toPrefixString(namespaceService));
+		}
+		return ret;
+	}
 
-  private DictionaryService dictionaryService;
-  private NamespaceService namespaceService;
-  private NodeService nodeService;
-  private NodeDAO nodeDao;
-  private AclDAO aclDao;
-  private String documentUrlPrefix;
-  private String shareUrl;
+	private Map<String, Pair<String, String>> toStringMap(Map<QName, Serializable> propertyMap) {
+		Map<String, Pair<String, String>> ret = new HashMap<String, Pair<String, String>>(1, 1.0f);
+		for (QName propertyName : propertyMap.keySet()) {
+			Serializable propertyValue = propertyMap.get(propertyName);
+			if (propertyValue != null) {
+				String propertyType = propertyValue.getClass().getName();
+				String stringValue = propertyValue.toString();
+				if (propertyType.equals("java.util.Date")) {
+					stringValue = sdf.format(propertyValue);
+				}
+				ret.put(propertyName.toPrefixString(namespaceService),
+						new Pair<String, String>(propertyType, stringValue));
+			}
+		}
+		return ret;
+	}
 
-  public void setDictionaryService(DictionaryService dictionaryService) {
-    this.dictionaryService = dictionaryService;
-  }
-  public void setNamespaceService(NamespaceService namespaceService) {
-    this.namespaceService = namespaceService;
-  }
-  public void setNodeService(NodeService nodeService) {
-    this.nodeService = nodeService;
-  }
-  public void setNodeDao(NodeDAO nodeDao) {
-    this.nodeDao = nodeDao;
-  }
-  public void setAclDao(AclDAO aclDao) {
-    this.aclDao = aclDao;
-  }
+	private List<Acl> getAllAcls(Long nodeAclId) {
+		logger.debug("getAllAcls from " + nodeAclId);
+		Acl acl = aclDao.getAcl(nodeAclId);
+		Long parentNodeAclId = acl.getInheritsFrom();
+		logger.debug("parent acl is  " + parentNodeAclId);
+		if (parentNodeAclId == null || !acl.getInherits()) {
+			List<Acl> ret = new ArrayList<Acl>();
+			ret.add(acl);
+			return ret;
+		} else {
+			List<Acl> inheritedAcls = getAllAcls(parentNodeAclId);
+			logger.debug("Current acl with id " + nodeAclId + " is " + acl);
+			inheritedAcls.add(acl);
+			return inheritedAcls;
+		}
+	}
 
-  public void setDocumentUrlPrefix(String documentUrlPrefix) { this.documentUrlPrefix = documentUrlPrefix; }
+	private DictionaryService dictionaryService;
+	private NamespaceService namespaceService;
+	private NodeService nodeService;
+	private NodeDAO nodeDao;
+	private AclDAO aclDao;
+	private String documentUrlPrefix;
+	private String shareUrl;
+	private String thumbnailUrlPrefix;
+	private String previewUrlPrefix;
 
-  public void setShareUrl(String shareUrl) {
-    this.shareUrl = shareUrl;
-  }
+	public void setDictionaryService(DictionaryService dictionaryService) {
+		this.dictionaryService = dictionaryService;
+	}
+
+	public void setNamespaceService(NamespaceService namespaceService) {
+		this.namespaceService = namespaceService;
+	}
+
+	public void setNodeService(NodeService nodeService) {
+		this.nodeService = nodeService;
+	}
+
+	public void setNodeDao(NodeDAO nodeDao) {
+		this.nodeDao = nodeDao;
+	}
+
+	public void setAclDao(AclDAO aclDao) {
+		this.aclDao = aclDao;
+	}
+
+	public void setDocumentUrlPrefix(String documentUrlPrefix) {
+		this.documentUrlPrefix = documentUrlPrefix;
+	}
+
+	public void setShareUrl(String shareUrl) {
+		this.shareUrl = shareUrl;
+	}
+
+	public void setThumbnailUrlPrefix(String thumbnailUrlPrefix) {
+		this.thumbnailUrlPrefix = thumbnailUrlPrefix;
+	}
+
+	public void setPreviewUrlPrefix(String previewUrlPrefix) {
+		this.previewUrlPrefix = previewUrlPrefix;
+	}
 }
