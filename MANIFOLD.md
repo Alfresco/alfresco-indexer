@@ -18,6 +18,11 @@ cd alfresco-indexer/alfresco-indexer-webscripts
 mvn integration-test -Pamp-to-war,purge
 ```
 
+For a Maven full test, try with an empty local repository:
+```
+mv ~/.m2/settings.xml ~/.m2/settings.xml.orig                                                                                              mvn integration-test -Pamp-to-war,purge -Dmaven.repo.local=/tmp/mvn_temp_repo
+```
+
 For enterprise test, setup you settings.xml to define a `<server>` item with `<id>alfresco-private</id>` and run:
 ```
 mvn integration-test -Pamp-to-war,purge,enterprise
@@ -55,11 +60,14 @@ mvn install -DskipTests -Dmaven.test.skip=true
 rm -rf dist/connector-lib/alfresco-indexer*
 cp ~/alfresco-indexer/alfresco-indexer-client/target/alfresco-indexer-client.jar dist/connector-lib
 ```
-You can perform the same steps on ManifoldCF SVN trunk.
+You can perform the same steps on ManifoldCF SVN trunk:
+```
+svn checkout http://svn.apache.org/repos/asf/manifoldcf/trunk/ manifoldcf
+```
 
 ### Test Alfresco Webscripts Manifold Connector
 ```
-cd manifoldcf/connectors/alfresco-webscript
+cd connectors/alfresco-webscript
 # [change pom.xml with <alfresco.indexer.version>0.8.1-SNAPSHOT</alfresco.indexer.version>]
 mvn clean integration-test
 ```
@@ -67,7 +75,7 @@ Replace `0.8.1-SNAPSHOT` with the version of alfresco-indexer you built in the s
 
 ### Run Apache manifoldCF
 ```
-cd manifoldcf/dist/example
+cd ../../dist/example
 ./start.sh
 ```
 
