@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.lang.Boolean;
 
 import static org.junit.Assert.*;
 
@@ -54,13 +55,15 @@ public class AlfrescoIndexerIT {
     for (Map<String, Object> d : list) {
       String uuid = (String) d.get("uuid");
 
-      //Fetching metadata of the changed node
-      Map<String, Object> metadata = client.fetchMetadata(uuid);
-      String path = (String) metadata.get("path");
+      //Fetching metadata of the changed node, if node is not deleted
+      if (d.get("deleted") == Boolean.FALSE) {
+        Map<String, Object> metadata = client.fetchMetadata(uuid);
+        String path = (String) metadata.get("path");
 
-      //Checking metadata of one specific node, given its path
-      if ("/app:company_home/st:sites/cm:swsdp/cm:documentLibrary/cm:Agency_x0020_Files/cm:Logo_x0020_Files/cm:logo.png".equals(path)) {
-        assertMetadata(uuid, metadata);
+        //Checking metadata of one specific node, given its path
+        if ("/app:company_home/st:sites/cm:swsdp/cm:documentLibrary/cm:Agency_x0020_Files/cm:Logo_x0020_Files/cm:logo.png".equals(path)) {
+          assertMetadata(uuid, metadata);
+        }
       }
     }
 

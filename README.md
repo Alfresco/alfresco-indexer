@@ -5,6 +5,28 @@ What is it?
 ---
 Alfresco Indexer is an API that allows to index content stored in Alfresco, when you want, how you want, selecting the content you're interested to.
 
+Compatibility Matrix
+---
+
+| Alfresco Indexer version | (shipped with) ManifoldCF version | (tested wth) Alfresco edition/version |
+| ------------- |:-------------:| -----:|
+| 0.7.x | 1.8.0 to 2.2.0-RC0 | Community 5.0.[a,b,c,d], Enterprise 4.2.x |
+| 0.8.x | trunk (master) - WIP | Community 5.0.d, Enterprise 5.0.x |
+
+Community 5.1.[a,b,c]-EA is work in progress (add issue link)
+There may be other permutations that work but haven't been tested.
+
+Run Tests
+---
+```
+git clone git@github.com:maoo/alfresco-indexer.git
+mvn clean install -DskipTests
+cd alfresco-indexer-webscripts-war
+mvn clean integration-test
+```
+
+To know how to build the master and test it against ManifoldCF, follow [these instructions](MANIFOLD.md)
+
 Project Structure
 ---
 - *Alfresco Indexer Webscripts* - A server-side component (an [AMP](http://docs.alfresco.com/4.2/tasks/amp-install.html) that needs to be installed in Alfresco) that exposes a set of Webscripts on Alfresco Repository
@@ -112,7 +134,7 @@ Alfresco Indexer binaries can be found in [Maven Central](http://search.maven.or
   <dependency>
       <groupId>com.github.maoo.indexer</groupId>
       <artifactId>alfresco-indexer-client</artifactId>
-      <version>0.7.0</version>
+      <version>0.8.0</version>
   </dependency>
 ```
 
