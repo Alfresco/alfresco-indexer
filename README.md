@@ -147,6 +147,8 @@ mvn deploy -Pgpg
 If everything goes fine, make sure you're up-to-date with git master and run the release command:
 ```
 git status
+netstat -anl | grep 8080 #make sure local port 8080 is free
+mvn clean -Ppurge
 mvn release:prepare release:perform
 ```
 Follow [sonatype docs](http://central.sonatype.org/pages/apache-maven.html) for setting up your environment.
