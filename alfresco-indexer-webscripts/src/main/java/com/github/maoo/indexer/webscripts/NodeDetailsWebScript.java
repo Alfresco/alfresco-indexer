@@ -25,6 +25,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.io.InputStream;
 
 import com.github.maoo.indexer.utils.Utils;
 import org.alfresco.model.ContentModel;
@@ -48,6 +49,21 @@ import org.springframework.extensions.webscripts.DeclarativeWebScript;
 import org.springframework.extensions.webscripts.Status;
 import org.springframework.extensions.webscripts.WebScriptRequest;
 
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.context.ResourceLoaderAware;
+import org.springframework.core.io.ResourceLoader;
+
+import org.alfresco.repo.admin.SysAdminParams;
+import org.alfresco.repo.thumbnail.script.ScriptThumbnailService;
+import org.alfresco.service.cmr.thumbnail.ThumbnailService;
+import org.alfresco.repo.thumbnail.ThumbnailDefinition;
+import org.alfresco.repo.thumbnail.ThumbnailRegistry;
+import org.alfresco.service.cmr.repository.ContentReader;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.codec.binary.Base64;
+
+import org.alfresco.service.cmr.repository.ContentService;
+
 import com.google.gdata.util.common.base.StringUtil;
 
 /**
@@ -70,10 +86,11 @@ import com.google.gdata.util.common.base.StringUtil;
  * libraries (or StringBuffer), render out the payload without passing through
  * FreeMarker template
  */
-public class NodeDetailsWebScript extends DeclarativeWebScript {
+public class NodeDetailsWebScript extends DeclarativeWebScript implements InitializingBean, ResourceLoaderAware {
 
 	protected static final Log logger = LogFactory.getLog(NodeDetailsWebScript.class);
 	protected static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+	private static final String BASE_READ_PERMISSIONS = "ReadPermissions";
 
 	@Override
 	protected Map<String, Object> executeImpl(WebScriptRequest req, Status status, Cache cache) {
@@ -120,7 +137,8 @@ public class NodeDetailsWebScript extends DeclarativeWebScript {
 		for (Acl acl : acls) {
 			List<AccessControlEntry> aces = aclDao.getAccessControlList(acl.getId()).getEntries();
 			for (AccessControlEntry ace : aces) {
-				if (ace.getAccessStatus().equals(AccessStatus.ALLOWED)) {
+				if ((!ace.getPermission().getName().equals(BASE_READ_PERMISSIONS))
+						&& ace.getAccessStatus().equals(AccessStatus.ALLOWED)) {
 					if (!readableAuthorities.contains(ace.getAuthority())) {
 						readableAuthorities.add(ace.getAuthority());
 					}
@@ -142,11 +160,13 @@ public class NodeDetailsWebScript extends DeclarativeWebScript {
 		model.put("serviceContextPath", serviceContextPath);
 		model.put("documentUrlPrefix", documentUrlPrefix);
 		model.put("shareUrl", shareUrl);
-        model.put("thumbnailUrlPrefix", thumbnailUrlPrefix);
-        model.put("previewUrlPrefix", previewUrlPrefix);
+		model.put("shareUrlPrefix", shareUrlPrefix);
+		model.put("thumbnailUrlPrefix", thumbnailUrlPrefix);
+		model.put("previewUrlPrefix", previewUrlPrefix);
 
 		String documentUrlPath = String.format("/%s/%s/%s", storeProtocol, storeId, uuid);
 		model.put("documentUrlPath", documentUrlPath);
+		
 
 		// Calculating the contentUrlPath and adding it only if the contentType
 		// is child of cm:content
@@ -170,16 +190,84 @@ public class NodeDetailsWebScript extends DeclarativeWebScript {
 			}
 		}
 
+		String previewUrlPath = String.format("/api/node/%s/%s/%s/content/thumbnails/webpreview", storeProtocol,
+				storeId, uuid);
+		model.put("previewUrlPath", previewUrlPath);
+
 		String thumbnailUrlPath = String.format(
 				"/api/node/%s/%s/%s/content/thumbnails/doclib?c=queue&ph=true&lastModified=1", storeProtocol, storeId,
 				uuid);
 		model.put("thumbnailUrlPath", thumbnailUrlPath);
 
-		String previewUrlPath = String.format("/api/node/%s/%s/%s/content/thumbnails/webpreview", storeProtocol,
-				storeId, uuid);
-		model.put("previewUrlPath", previewUrlPath);
+		ThumbnailRegistry registry = thumbnailService.getThumbnailRegistry();
+		ThumbnailDefinition details = registry.getThumbnailDefinition("doclib");
+		try {
+			NodeRef thumbRef = thumbnailService.getThumbnailByName(nodeRef, ContentModel.PROP_CONTENT, "doclib");
+			if (thumbRef == null) {
+				thumbRef = thumbnailService.createThumbnail(nodeRef, ContentModel.PROP_CONTENT, details.getMimetype(),
+						details.getTransformationOptions(), details.getName());
+			}
+
+			ContentReader thumbReader = contentService.getReader(thumbRef, ContentModel.PROP_CONTENT);
+			InputStream thumbsIs = thumbReader.getContentInputStream();
+			String thumbBase64 = Base64.encodeBase64String(IOUtils.toByteArray(thumbsIs));
+			model.put("thumbnailBase64", thumbBase64);
+			IOUtils.closeQuietly(thumbsIs);
+		} catch (Exception e) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("It was not possible to get/build thumbnail doclib for nodeRef: " + nodeRef + ". Message: "
+						+ e.getMessage());
+			}
+
+			// thumbnail placeholder
+			String phPath = scriptThumbnailService.getMimeAwarePlaceHolderResourcePath("doclib", details.getMimetype());
+
+			StringBuilder sb = new StringBuilder("classpath:").append(phPath);
+			final String classpathResource = sb.toString();
+
+			InputStream is = null;
+			try {
+				is = resourceLoader.getResource(classpathResource).getInputStream();
+				String thumbBase64 = Base64.encodeBase64String(IOUtils.toByteArray(is));
+				model.put("thumbnailBase64", thumbBase64);
+			} catch (Exception e2) {
+				if (logger.isWarnEnabled()) {
+					logger.warn("It was not possible to get/build placeholder thumbnail doclib for nodeRef: " + nodeRef
+							+ ". Message: " + e2.getMessage());
+				}
+			} finally {
+				IOUtils.closeQuietly(is);
+			}
+
+		}
+
+		model.put("contentUrlPrefix", contentUrlPrefix);
 
 		return model;
+	}
+
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		boolean alfrescoWithPort = true;
+		if ((sysAdminParams.getAlfrescoProtocol() == "https" && sysAdminParams.getAlfrescoPort() == 443)
+				|| (sysAdminParams.getAlfrescoProtocol() == "http" && sysAdminParams.getAlfrescoPort() == 80)) {
+			alfrescoWithPort = false;
+		}
+		String alfrescoPrefix = sysAdminParams.getAlfrescoProtocol() + "://" + sysAdminParams.getAlfrescoHost()
+				+ (alfrescoWithPort ? ":" + sysAdminParams.getAlfrescoPort() : "") + "/"
+				+ sysAdminParams.getAlfrescoContext();
+		contentUrlPrefix = alfrescoPrefix + "/service";
+		previewUrlPrefix = alfrescoPrefix + "/service";
+		thumbnailUrlPrefix = alfrescoPrefix + "/service";
+
+		boolean shareWithPort = true;
+		if ((sysAdminParams.getShareProtocol() == "https" && sysAdminParams.getSharePort() == 443)
+				|| (sysAdminParams.getShareProtocol() == "http" && sysAdminParams.getSharePort() == 80)) {
+			shareWithPort = false;
+		}
+		shareUrlPrefix = sysAdminParams.getShareProtocol() + "://" + sysAdminParams.getShareHost()
+				+ (shareWithPort ? ":" + sysAdminParams.getSharePort() : "") + "/" + sysAdminParams.getShareContext();
+
 	}
 
 	private boolean isContentAware(NodeRef nodeRef) {
@@ -229,6 +317,22 @@ public class NodeDetailsWebScript extends DeclarativeWebScript {
 		}
 	}
 
+	public List<String> getThumbnailDefinitions(NodeRef nodeRef) {
+		List<String> result = new ArrayList<String>(7);
+
+		ContentReader contentReader = contentService.getReader(nodeRef, ContentModel.PROP_CONTENT);
+		if (contentReader != null) {
+			String mimetype = contentReader.getMimetype();
+			List<ThumbnailDefinition> thumbnailDefinitions = thumbnailService.getThumbnailRegistry()
+					.getThumbnailDefinitions(mimetype, contentReader.getSize());
+			for (ThumbnailDefinition thumbnailDefinition : thumbnailDefinitions) {
+				result.add(thumbnailDefinition.getName());
+			}
+		}
+
+		return result;
+	}
+
 	private DictionaryService dictionaryService;
 	private NamespaceService namespaceService;
 	private NodeService nodeService;
@@ -236,8 +340,15 @@ public class NodeDetailsWebScript extends DeclarativeWebScript {
 	private AclDAO aclDao;
 	private String documentUrlPrefix;
 	private String shareUrl;
+	private String shareUrlPrefix;
 	private String thumbnailUrlPrefix;
 	private String previewUrlPrefix;
+	private SysAdminParams sysAdminParams;
+	private ResourceLoader resourceLoader;
+	private ScriptThumbnailService scriptThumbnailService;
+	private ThumbnailService thumbnailService;
+	private ContentService contentService;
+	private String contentUrlPrefix;
 
 	public void setDictionaryService(DictionaryService dictionaryService) {
 		this.dictionaryService = dictionaryService;
@@ -274,4 +385,34 @@ public class NodeDetailsWebScript extends DeclarativeWebScript {
 	public void setPreviewUrlPrefix(String previewUrlPrefix) {
 		this.previewUrlPrefix = previewUrlPrefix;
 	}
+
+	public void setShareUrlPrefix(String shareUrlPrefix) {
+		this.shareUrlPrefix = shareUrlPrefix;
+	}
+
+	public void setSysAdminParams(SysAdminParams sysAdminParams) {
+		this.sysAdminParams = sysAdminParams;
+	}
+
+	public void setThumbnailService(ThumbnailService thumbnailService) {
+		this.thumbnailService = thumbnailService;
+	}
+
+	@Override
+	public void setResourceLoader(ResourceLoader resourceLoader) {
+		this.resourceLoader = resourceLoader;
+	}
+
+	public void setScriptThumbnailService(ScriptThumbnailService scriptThumbnailService) {
+		this.scriptThumbnailService = scriptThumbnailService;
+	}
+
+	public void setContentService(ContentService contentService) {
+		this.contentService = contentService;
+	}
+
+	public void setContentUrlPrefix(String contentUrlPrefix) {
+		this.contentUrlPrefix = contentUrlPrefix;
+	}
+
 }
