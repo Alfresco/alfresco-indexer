@@ -28,6 +28,14 @@
   <#if shareUrlPath??>
     "shareUrlPath" : "${shareUrl + shareUrlPath}",
   </#if>
+  
+
+  <#if thumbnailBase64??>
+    "thumbnailBase64" : "${thumbnailBase64}",
+  </#if>
+  <#if imgPreviewUrlPath??>
+    "imgPreviewUrlPath" : "${previewUrlPrefix + imgPreviewUrlPath}",
+  </#if>
 
   <#assign propNames = properties?keys>
   "aspects" : [
