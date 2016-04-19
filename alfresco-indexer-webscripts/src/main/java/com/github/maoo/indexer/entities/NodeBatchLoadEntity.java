@@ -16,23 +16,25 @@
  */
 package com.github.maoo.indexer.entities;
 
+import java.util.Collection;
 import java.util.Set;
 
 public class NodeBatchLoadEntity extends org.alfresco.repo.domain.node.ibatis.NodeBatchLoadEntity {
   private Long minId;
   private Long maxId;
   private String uuid;
-  private Set<String> allowedTypes;
-  private Set<String> excludedNameExtension;
-//  private Set<String> properties;
-  private Set<String> aspects;
-  private Set<String> mimeTypes;
+  private Collection<String> allowedTypes;
+  private Collection<String> excludedNameExtension;
+//  private Collection<String> properties;
+//  private Collection<String> sites;
+  private Collection<String> aspects;
+  private Collection<String> mimeTypes;
 
   //These input values will be set on all returned NodeEntity objects returned by iBatis mappers
   private String storeProtocol;
   private String storeIdentifier;
   
-  public Set<String> getAllowedTypes() {
+  public Collection<String> getAllowedTypes() {
     return allowedTypes;
   }
 
@@ -52,7 +54,7 @@ public class NodeBatchLoadEntity extends org.alfresco.repo.domain.node.ibatis.No
     this.maxId = maxId;
   }
 
-  public void setAllowedTypes(Set<String> allowedTypes) {
+  public void setAllowedTypes(Collection<String> allowedTypes) {
     this.allowedTypes = allowedTypes;
   }
 
@@ -84,31 +86,31 @@ public class NodeBatchLoadEntity extends org.alfresco.repo.domain.node.ibatis.No
       this.excludedNameExtension= excludedNameExtension;
   }
   
-  public Set<String> getExcludedNameExtension(){
+  public Collection<String> getExcludedNameExtension(){
       return this.excludedNameExtension;
   }
   
-//  public void setProperties(Set<String> properties){
+//  public void setProperties(Collection<String> properties){
 //      this.properties=properties;
 //  }
 //  
-//  public Set<String> getProperties(){
+//  public Collection<String> getProperties(){
 //      return this.properties;
 //  }
   
-  public void setAspects(Set<String> aspects){
+  public void setAspects(Collection<String> aspects){
       this.aspects=aspects;
   }
   
-  public Set<String> getAspects(){
+  public Collection<String> getAspects(){
       return this.aspects;
   }
   
-  public void setMimeTypes(Set<String> mimeTypes){
+  public void setMimeTypes(Collection<String> mimeTypes){
       this.mimeTypes=mimeTypes;
   }
   
-  public Set<String> getMimeTypes(){
+  public Collection<String> getMimeTypes(){
       return this.mimeTypes;
   }
 }

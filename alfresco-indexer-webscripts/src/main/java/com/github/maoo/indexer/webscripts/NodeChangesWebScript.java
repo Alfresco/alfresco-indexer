@@ -18,15 +18,12 @@ package com.github.maoo.indexer.webscripts;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.github.maoo.indexer.dao.IndexingDaoImpl;
-import com.github.maoo.indexer.entities.NodeEntity;
 import org.alfresco.error.AlfrescoRuntimeException;
 import org.alfresco.repo.domain.node.NodeDAO;
 import org.alfresco.repo.domain.qname.QNameDAO;
@@ -42,6 +39,10 @@ import org.springframework.extensions.webscripts.DeclarativeWebScript;
 import org.springframework.extensions.webscripts.Status;
 import org.springframework.extensions.webscripts.WebScriptException;
 import org.springframework.extensions.webscripts.WebScriptRequest;
+
+import com.github.maoo.indexer.dao.IndexingDaoImpl;
+import com.github.maoo.indexer.entities.Filters;
+import com.github.maoo.indexer.entities.NodeEntity;
 
 import freemarker.ext.beans.BeansWrapper;
 import freemarker.template.TemplateHashModel;
@@ -106,9 +107,9 @@ public class NodeChangesWebScript extends DeclarativeWebScript {
         "indexingFilters: %s\n", lastTxnId, lastAclChangesetId, storeId, storeProtocol, indexingFilters));
 
     //Indexing filters
-    if(indexingFilters!=null){
-        setIndexingFilters(indexingFilters);
-    }
+    Filters filters = null;
+	if (indexingFilters != null)
+		filters = this.getIndexingFilters(indexingFilters);
     
     //Getting the Store ID on which the changes are requested
     Pair<Long,StoreRef> store = nodeDao.getStore(new StoreRef(storeProtocol, storeId));
@@ -123,7 +124,7 @@ public class NodeChangesWebScript extends DeclarativeWebScript {
     if (lastTxnId == null) {
       lastTxnId = new Long(0);
     }
-    List<NodeEntity> nodesFromTxns = indexingService.getNodesByTransactionId(store, lastTxnId, maxTxns);
+    List<NodeEntity> nodesFromTxns = indexingService.getNodesByTransactionId(store, lastTxnId, maxTxns, filters);
     if (nodesFromTxns != null && nodesFromTxns.size() > 0) {
       nodes.addAll(nodesFromTxns);
     }
@@ -142,7 +143,7 @@ public class NodeChangesWebScript extends DeclarativeWebScript {
     if (lastAclChangesetId == null) {
       lastAclChangesetId = new Long(0);
     }
-    List<NodeEntity> nodesFromAcls = indexingService.getNodesByAclChangesetId(store, lastAclChangesetId, maxAclChangesets);
+    List<NodeEntity> nodesFromAcls = indexingService.getNodesByAclChangesetId(store, lastAclChangesetId, maxAclChangesets, filters);
     if (nodesFromAcls != null && nodesFromAcls.size() > 0) {
       nodes.addAll(nodesFromAcls);
     }
@@ -189,62 +190,45 @@ public class NodeChangesWebScript extends DeclarativeWebScript {
   }
 
   @SuppressWarnings("unchecked")
-private void setIndexingFilters(JSONObject indexingParams)
-  {
-      
-      //Reset filters
-      this.indexingService.setSites(Collections.<String> emptySet());
-      this.indexingService.setMimeTypes(Collections.<String> emptySet());
-      this.indexingService.setAspects(Collections.<String> emptySet());
-      this.indexingService.setProperties(Collections.<String> emptySet());
+private Filters getIndexingFilters(JSONObject indexingParams) {
+	  Filters filters = new Filters();
       
       //Types filter
       List<String> types= (List<String>) indexingParams.get("typeFilters");
       
       if(types!=null && types.size()>0){
-          this.indexingService.setAllowedTypes(new HashSet<String>(types));
+          filters.addTypes(types);
       }
       
-       //Site filter
-       List<String> sites= (List<String>) indexingParams.get("siteFilters");
+      //Site filter
+      List<String> sites= (List<String>) indexingParams.get("siteFilters");
       
-       if(sites!=null && sites.size()>0){
-           this.indexingService.setSites(new HashSet<String>(sites));
-       }
+      if(sites!=null && sites.size()>0){
+          filters.addSites(sites);
+      }
           
-       //Mymetype filter
-       List<String> mimetypes= (List<String>) indexingParams.get("mimetypeFilters");
+      //Mymetype filter
+      List<String> mimetypes= (List<String>) indexingParams.get("mimetypeFilters");
        
-       if(mimetypes!=null && mimetypes.size()>0){
-           this.indexingService.setMimeTypes(new HashSet<String>(mimetypes));
-       }
+      if(mimetypes!=null && mimetypes.size()>0){
+          filters.addMimeTypes(mimetypes);
+      }
           
-       //Aspect filter
-       List<String> aspects= (List<String>) indexingParams.get("aspectFilters");
+      //Aspect filter
+      List<String> aspects= (List<String>) indexingParams.get("aspectFilters");
        
-       if(aspects!=null && aspects.size()>0){
-           this.indexingService.setAspects(new HashSet<String>(aspects));
-       }
+      if(aspects!=null && aspects.size()>0){
+          filters.addAspects(aspects);
+      }
           
-       //Metadata filter
-       Map<String,String> auxMap= (Map<String, String>) indexingParams.get("metadataFilters");
+      //Metadata filter
+      Map<String,String> auxMap= (Map<String, String>) indexingParams.get("metadataFilters");
        
-       if(auxMap!=null && auxMap.size()>0){
-           
-           Set<String> metadataParams= new HashSet<String>(auxMap.size());
-           Set<String> keys= auxMap.keySet();
-           StringBuilder sb= new StringBuilder();
-           
-           for(String key:keys){
-               sb.append(key).append(":").append(auxMap.get(key));
-               metadataParams.add(sb.toString());
-               //reset StringBuilder
-               sb.setLength(0);
-           }
-           this.indexingService.setProperties(metadataParams);
-       }
+      if(auxMap!=null && auxMap.size()>0){
+          filters.addMetadata(auxMap);
+      }
       
-
+      return filters;
   }
 
   private NamespaceService namespaceService;

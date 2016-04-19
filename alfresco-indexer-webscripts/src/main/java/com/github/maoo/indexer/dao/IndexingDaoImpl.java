@@ -23,10 +23,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.github.maoo.indexer.entities.NodeBatchLoadEntity;
-import com.github.maoo.indexer.entities.NodeEntity;
-import com.github.maoo.indexer.utils.Utils;
-
 import org.alfresco.model.ContentModel;
 import org.alfresco.service.ServiceRegistry;
 import org.alfresco.service.cmr.repository.NodeRef;
@@ -40,6 +36,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.ibatis.session.RowBounds;
 import org.mybatis.spring.SqlSessionTemplate;
+
+import com.github.maoo.indexer.entities.Filters;
+import com.github.maoo.indexer.entities.NodeBatchLoadEntity;
+import com.github.maoo.indexer.entities.NodeEntity;
+import com.github.maoo.indexer.utils.Utils;
 
 public class IndexingDaoImpl
 {
@@ -66,7 +67,7 @@ public class IndexingDaoImpl
     private Set<String> sites;
 
     @SuppressWarnings("unchecked")
-	public List<NodeEntity> getNodesByAclChangesetId(Pair<Long, StoreRef> store, Long lastAclChangesetId, int maxResults)
+	public List<NodeEntity> getNodesByAclChangesetId(Pair<Long, StoreRef> store, Long lastAclChangesetId, int maxResults, Filters filters)
     {
         StoreRef storeRef = store.getSecond();
         if (maxResults <= 0 || maxResults == Integer.MAX_VALUE)
@@ -82,18 +83,19 @@ public class IndexingDaoImpl
         nodeLoadEntity.setStoreIdentifier(storeRef.getIdentifier());
         nodeLoadEntity.setMinId(lastAclChangesetId);
         nodeLoadEntity.setMaxId(lastAclChangesetId + maxResults);
-        nodeLoadEntity.setAllowedTypes(this.allowedTypes);
+        nodeLoadEntity.setAllowedTypes(filters == null ? this.allowedTypes : filters.getTypes());
         nodeLoadEntity.setExcludedNameExtension(this.excludedNameExtension);
-//        nodeLoadEntity.setProperties(this.properties);
-        nodeLoadEntity.setAspects(this.aspects);
-        nodeLoadEntity.setMimeTypes(this.mimeTypes);
+        //nodeLoadEntity.setProperties(filters == null ? this.properties : filters.getMetadata());
+        //nodeLoadEntity.setSites(filters == null ? this.sites : filters.getSites());
+        nodeLoadEntity.setAspects(filters == null ? this.aspects : filters.getAspects());
+        nodeLoadEntity.setMimeTypes(filters == null ? this.mimeTypes : filters.getMimeTypes());
 
         return filterNodes((List<NodeEntity>) (List<?>)template.selectList(SELECT_NODES_BY_ACLS, nodeLoadEntity, new RowBounds(0,
                 Integer.MAX_VALUE)));
     }
 
     @SuppressWarnings("unchecked")
-	public List<NodeEntity> getNodesByTransactionId(Pair<Long, StoreRef> store, Long lastTransactionId, int maxResults)
+	public List<NodeEntity> getNodesByTransactionId(Pair<Long, StoreRef> store, Long lastTransactionId, int maxResults, Filters filters)
     {
         StoreRef storeRef = store.getSecond();
         if (maxResults <= 0 || maxResults == Integer.MAX_VALUE)
@@ -109,11 +111,12 @@ public class IndexingDaoImpl
         nodeLoadEntity.setStoreIdentifier(storeRef.getIdentifier());
         nodeLoadEntity.setMinId(lastTransactionId);
         nodeLoadEntity.setMaxId(lastTransactionId + maxResults);
-        nodeLoadEntity.setAllowedTypes(this.allowedTypes);
+        nodeLoadEntity.setAllowedTypes(filters == null ? this.allowedTypes : filters.getTypes());
         nodeLoadEntity.setExcludedNameExtension(this.excludedNameExtension);
-//        nodeLoadEntity.setProperties(this.properties);
-        nodeLoadEntity.setAspects(this.aspects);
-        nodeLoadEntity.setMimeTypes(this.mimeTypes);
+        //nodeLoadEntity.setProperties(filters == null ? this.properties : filters.getMetadata());
+        //nodeLoadEntity.setSites(filters == null ? this.sites : filters.getSites());
+        nodeLoadEntity.setAspects(filters == null ? this.aspects : filters.getAspects());
+        nodeLoadEntity.setMimeTypes(filters == null ? this.mimeTypes : filters.getMimeTypes());
 
         return filterNodes((List<NodeEntity>) (List<?>) template.selectList(SELECT_NODES_BY_TXNS, nodeLoadEntity, new RowBounds(0,
                 Integer.MAX_VALUE)));
