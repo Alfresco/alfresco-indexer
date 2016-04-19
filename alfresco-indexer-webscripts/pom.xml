@@ -8,7 +8,7 @@
     <parent>
         <groupId>com.github.maoo.indexer</groupId>
         <artifactId>alfresco-indexer-parent</artifactId>
-        <version>0.8.2-SNAPSHOT</version>
+        <version>0.8.2</version>
     </parent>
 
     <dependencyManagement>
