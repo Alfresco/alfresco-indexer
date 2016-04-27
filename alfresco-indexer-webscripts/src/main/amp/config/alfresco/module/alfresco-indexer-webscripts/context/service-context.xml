@@ -90,6 +90,7 @@
     <property name="dictionaryService" ref="DictionaryService"/>
     <property name="namespaceService" ref="NamespaceService"/>
     <property name="nodeService" ref="NodeService"/>
+    <property name="versionService" ref="VersionService"/>
     <property name="nodeDao" ref="nodeDAO"/>
     <property name="aclDao" ref="aclDAO"/>
     <property name="documentUrlPrefix" value="${indexer.document.url.prefix}"/>

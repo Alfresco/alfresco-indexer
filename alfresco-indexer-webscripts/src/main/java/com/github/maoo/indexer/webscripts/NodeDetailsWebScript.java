@@ -38,6 +38,8 @@ import org.alfresco.service.cmr.repository.NodeRef;
 import org.alfresco.service.cmr.repository.NodeService;
 import org.alfresco.service.cmr.repository.Path;
 import org.alfresco.service.cmr.security.AccessStatus;
+import org.alfresco.service.cmr.version.Version;
+import org.alfresco.service.cmr.version.VersionService;
 import org.alfresco.service.namespace.NamespaceService;
 import org.alfresco.service.namespace.QName;
 import org.alfresco.util.Pair;
@@ -133,7 +135,12 @@ public class NodeDetailsWebScript extends DeclarativeWebScript {
 			model.put("mimetype", contentData.getMimetype());
 			model.put("size", contentData.getSize());
 		}
-
+		
+		Version version = this.versionService.getCurrentVersion(nodeRef);
+		if (version != null) {
+			model.put("version", version.getVersionLabel());
+		}
+		
 		model.put("nsResolver", namespaceService);
 		model.put("readableAuthorities", readableAuthorities);
 		model.put("properties", properties);
@@ -233,6 +240,7 @@ public class NodeDetailsWebScript extends DeclarativeWebScript {
 	private NamespaceService namespaceService;
 	private NodeService nodeService;
 	private NodeDAO nodeDao;
+	private VersionService versionService;
 	private AclDAO aclDao;
 	private String documentUrlPrefix;
 	private String shareUrl;
@@ -253,6 +261,10 @@ public class NodeDetailsWebScript extends DeclarativeWebScript {
 
 	public void setNodeDao(NodeDAO nodeDao) {
 		this.nodeDao = nodeDao;
+	}
+	
+	public void setVersionService(VersionService versionService) {
+		this.versionService = versionService;
 	}
 
 	public void setAclDao(AclDAO aclDao) {

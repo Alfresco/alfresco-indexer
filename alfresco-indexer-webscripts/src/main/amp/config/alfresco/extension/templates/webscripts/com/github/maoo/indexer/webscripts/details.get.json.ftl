@@ -15,6 +15,9 @@
   <#if size??>
     "size" : "${size?c}",
   </#if>
+  <#if version??>
+    "version" : "${version}",
+  </#if>
 
   <#if contentUrlPath??>
     "contentUrlPath" : "${serviceContextPath + contentUrlPath}",
