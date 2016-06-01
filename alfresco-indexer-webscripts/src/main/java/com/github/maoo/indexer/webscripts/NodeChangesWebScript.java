@@ -22,13 +22,16 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.alfresco.error.AlfrescoRuntimeException;
 import org.alfresco.repo.domain.node.NodeDAO;
 import org.alfresco.repo.domain.qname.QNameDAO;
 import org.alfresco.service.cmr.repository.StoreRef;
+import org.alfresco.service.namespace.InvalidQNameException;
 import org.alfresco.service.namespace.NamespaceService;
+import org.alfresco.service.namespace.QName;
 import org.alfresco.util.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -196,8 +199,8 @@ private Filters getIndexingFilters(JSONObject indexingParams) {
       //Types filter
       List<String> types= (List<String>) indexingParams.get("typeFilters");
       
-      if(types!=null && types.size()>0){
-          filters.addTypes(types);
+      if(types!=null) for (String type : types) {
+          filters.addType(this.toQName(type).toString());
       }
       
       //Site filter
@@ -217,18 +220,26 @@ private Filters getIndexingFilters(JSONObject indexingParams) {
       //Aspect filter
       List<String> aspects= (List<String>) indexingParams.get("aspectFilters");
        
-      if(aspects!=null && aspects.size()>0){
-          filters.addAspects(aspects);
+      if(aspects!=null) for (String aspect : aspects) {
+          filters.addAspect(this.toQName(aspect).toString());
       }
           
       //Metadata filter
       Map<String,String> auxMap= (Map<String, String>) indexingParams.get("metadataFilters");
        
-      if(auxMap!=null && auxMap.size()>0){
-          filters.addMetadata(auxMap);
+      if(auxMap!=null) for (Entry<String,String> entry : auxMap.entrySet()) {
+          filters.addMetadata(this.toQName(entry.getKey()).toString(), entry.getValue());
       }
       
       return filters;
+  }
+  
+  private QName toQName(String qname) {
+	  try {
+		  return QName.createQName(qname);
+	  } catch (InvalidQNameException iqe) {
+		  return QName.createQName(qname, this.namespaceService);
+	  }
   }
 
   private NamespaceService namespaceService;
