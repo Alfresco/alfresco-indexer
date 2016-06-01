@@ -29,7 +29,6 @@ import org.alfresco.error.AlfrescoRuntimeException;
 import org.alfresco.repo.domain.node.NodeDAO;
 import org.alfresco.repo.domain.qname.QNameDAO;
 import org.alfresco.service.cmr.repository.StoreRef;
-import org.alfresco.service.namespace.InvalidQNameException;
 import org.alfresco.service.namespace.NamespaceService;
 import org.alfresco.service.namespace.QName;
 import org.alfresco.util.Pair;
@@ -235,10 +234,10 @@ private Filters getIndexingFilters(JSONObject indexingParams) {
   }
   
   private QName toQName(String qname) {
-	  try {
-		  return QName.createQName(qname);
-	  } catch (InvalidQNameException iqe) {
+	  if (qname != null && qname.length() > 0 && qname.charAt(0) != QName.NAMESPACE_BEGIN) {
 		  return QName.createQName(qname, this.namespaceService);
+	  } else {
+		  return QName.createQName(qname);
 	  }
   }
 
