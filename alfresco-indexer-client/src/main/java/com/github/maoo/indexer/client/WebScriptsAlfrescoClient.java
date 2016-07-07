@@ -21,8 +21,12 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -73,6 +77,7 @@ public class WebScriptsAlfrescoClient implements AlfrescoClient {
   private final String username;
   private final String password;
 
+  private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
   private final Logger logger = LoggerFactory.getLogger(WebScriptsAlfrescoClient.class);
 
   public WebScriptsAlfrescoClient(String protocol, String hostname,
@@ -244,7 +249,7 @@ private HttpGet createGetRequest(String url) {
     List<Map<String, String>> properties = extractPropertiesFieldFromMap(nodeUuid, map);
 
     for (Map<String, String> e : properties) {
-      map.put(e.get("name"), e.get("value"));
+      map.put(e.get("name"), this.parseValue(e.get("type"), e.get("value")));
     }
     return map;
   }
@@ -428,5 +433,37 @@ private HttpGet createGetRequest(String url) {
 	} catch (Exception e) {
 		throw new AlfrescoDownException("Alfresco appears to be down", e);
 	}
+  }
+  
+  private Object parseValue(String type, String value) {
+	  if (type == null)
+		  return value;
+	  
+	  try {
+		  Class<?> typeClass = Class.forName(type);
+		  if (String.class.isAssignableFrom(typeClass)) {
+		  } else if (Number.class.isAssignableFrom(typeClass)) {
+			  Constructor<?> constructor = typeClass.getConstructor(String.class);
+			  return constructor.newInstance(value);
+		  } else if (java.util.Date.class.isAssignableFrom(typeClass)) {
+			  synchronized (this.sdf) {
+				  return this.sdf.parse(value);
+			  }
+		  }
+	  } catch (ClassNotFoundException cnfe) {
+		  this.logger.warn("Class " + type + " not found; skipping conversion from java.util.String");
+	  } catch (NoSuchMethodException nsme) {
+		  this.logger.error("Class " + type + " does not have a java.util.String constructor, as expected; skipping conversion from java.util.String");
+	  } catch (InvocationTargetException ite) {
+		  this.logger.error(ite.getMessage() + "; skipping conversion from java.util.String", ite.getTargetException());
+	  } catch (IllegalAccessException iae) {
+		  this.logger.error("The java.util.String constructor is not public; skipping conversion from java.util.String");
+	  } catch (InstantiationException ie) {
+		  this.logger.error("Class " + type + " cannot be instantiated; skipping conversion from java.util.String");
+	  } catch (ParseException pe) {
+		  this.logger.error("The " + value + " date could not be parsed; skipping conversion from java.util.String");
+	  }
+
+	  return value;
   }
 }
