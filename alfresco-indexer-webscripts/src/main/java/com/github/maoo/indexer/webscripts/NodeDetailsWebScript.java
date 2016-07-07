@@ -210,7 +210,9 @@ public class NodeDetailsWebScript extends DeclarativeWebScript {
 				String propertyType = propertyValue.getClass().getName();
 				String stringValue = propertyValue.toString();
 				if (propertyType.equals("java.util.Date")) {
-					stringValue = sdf.format(propertyValue);
+					synchronized (sdf) { // not thread safe
+						stringValue = sdf.format(propertyValue);
+					}
 				}
 				ret.put(propertyName.toPrefixString(namespaceService),
 						new Pair<String, String>(propertyType, stringValue));
