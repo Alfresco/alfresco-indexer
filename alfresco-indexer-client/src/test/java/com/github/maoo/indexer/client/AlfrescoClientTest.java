@@ -198,7 +198,7 @@ public class AlfrescoClientTest {
         metadata.get("aspects"));
     Assert.assertEquals("A/B/C", metadata.get("path"));
     Assert.assertEquals("pluto", metadata.get("pippo"));
-    Assert.assertEquals("5", metadata.get("foo"));
+    Assert.assertEquals(5.0, metadata.get("foo"));
   }
 
   @Test
