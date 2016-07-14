@@ -442,6 +442,8 @@ private HttpGet createGetRequest(String url) {
 	  try {
 		  Class<?> typeClass = Class.forName(type);
 		  if (String.class.isAssignableFrom(typeClass)) {
+		  } else if (Boolean.class.isAssignableFrom(typeClass)) {
+			  return new Boolean(value);
 		  } else if (Number.class.isAssignableFrom(typeClass)) {
 			  Constructor<?> constructor = typeClass.getConstructor(String.class);
 			  return constructor.newInstance(value);
