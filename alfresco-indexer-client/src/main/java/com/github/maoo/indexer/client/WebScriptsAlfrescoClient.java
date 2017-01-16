@@ -35,6 +35,7 @@ import java.util.Map;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -79,6 +80,9 @@ public class WebScriptsAlfrescoClient implements AlfrescoClient {
 
   private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
   private final Logger logger = LoggerFactory.getLogger(WebScriptsAlfrescoClient.class);
+  private int connectTimeout = 60000;
+  private int socketTimeout = 60000;
+  private int requestTimeout = 60000;
 
   public WebScriptsAlfrescoClient(String protocol, String hostname,
                                   String endpoint, String storeProtocol, String storeId) {
@@ -115,10 +119,11 @@ public class WebScriptsAlfrescoClient implements AlfrescoClient {
   }
   
   private AlfrescoResponse getDocumentsActions(String url){
-	  CloseableHttpClient httpClient = HttpClients.createDefault();
+
 	  logger.debug("Hitting url: {}", url);
 
 	  try{
+	    CloseableHttpClient httpClient = getHttpClient();
 		  HttpGet httpGet = createGetRequest(url);
 		  CloseableHttpResponse response = httpClient.execute(httpGet);
 		  HttpEntity entity = response.getEntity();
@@ -258,7 +263,7 @@ private HttpGet createGetRequest(String url) {
     String fullUrl = String.format("%s/%s", metadataUrl, nodeUuid);
     logger.debug("url: {}", fullUrl);
     try {
-      CloseableHttpClient httpClient = HttpClients.createDefault();
+      CloseableHttpClient httpClient = getHttpClient();
       HttpGet httpGet = createGetRequest(fullUrl);
       CloseableHttpResponse response = httpClient.execute(httpGet);
       HttpEntity entity = response.getEntity();
@@ -343,7 +348,7 @@ private HttpGet createGetRequest(String url) {
   public AlfrescoUser fetchUserAuthorities(String username)
 		  throws AlfrescoDownException {
 	  CloseableHttpResponse response=null;
-	  CloseableHttpClient httpClient = HttpClients.createDefault();
+    CloseableHttpClient httpClient = getHttpClient();
 	  try {
 		  String url = String.format("%s%s", authoritiesUrl, username);
 
@@ -379,7 +384,7 @@ private HttpGet createGetRequest(String url) {
           throws AlfrescoDownException {
     HttpResponse response;
     try {
-      CloseableHttpClient httpClient = HttpClients.createDefault();
+      CloseableHttpClient httpClient = getHttpClient();
 
       if (logger.isDebugEnabled()) {
         logger.debug("Hitting url: " + authoritiesUrl);
@@ -425,7 +430,7 @@ private HttpGet createGetRequest(String url) {
 		  httpGet.addHeader("Authorization", "Basic " + Base64.encodeBase64String(String.format("%s:%s", username, password).getBytes(Charset.forName("UTF-8"))));
 	  }
 
-	  CloseableHttpClient httpClient = HttpClients.createDefault();
+	  CloseableHttpClient httpClient = getHttpClient();
 	  try {
 		HttpResponse response = httpClient.execute(httpGet);
 		InputStream stream = response.getEntity().getContent(); 
@@ -467,5 +472,28 @@ private HttpGet createGetRequest(String url) {
 	  }
 
 	  return value;
+  }
+
+  public CloseableHttpClient getHttpClient() {
+    RequestConfig config = RequestConfig.copy(RequestConfig.DEFAULT)
+        .setConnectTimeout(this.connectTimeout)
+        .setSocketTimeout(this.socketTimeout)
+        .setConnectionRequestTimeout(this.requestTimeout)
+        .build();
+    CloseableHttpClient httpClient = HttpClients.custom().setDefaultRequestConfig(config).build();
+
+    return httpClient;
+  }
+
+  public void setConnectTimeout(int connectTimeout) {
+    this.connectTimeout = connectTimeout;
+  }
+
+  public void setSocketTimeout(int socketTimeout) {
+    this.socketTimeout = socketTimeout;
+  }
+
+  public void setRequestTimeout(int requestTimeout) {
+    this.requestTimeout = requestTimeout;
   }
 }
