@@ -81,7 +81,7 @@ public class WebScriptsAlfrescoClient implements AlfrescoClient {
   private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
   private final Logger logger = LoggerFactory.getLogger(WebScriptsAlfrescoClient.class);
   private int connectTimeout = 60000;
-  private int socketTimeout = 60000;
+  private int socketTimeout = 300000;
   private int requestTimeout = 60000;
 
   public WebScriptsAlfrescoClient(String protocol, String hostname,
