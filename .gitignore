@@ -16,3 +16,6 @@ alf_data_dev
 .project
 .classpath
 .settings
+**/.settings
+**/.project
+**/.classpath
