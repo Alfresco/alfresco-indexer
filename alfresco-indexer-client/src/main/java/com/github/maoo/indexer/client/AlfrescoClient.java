@@ -69,4 +69,29 @@ public interface AlfrescoClient {
    * @return Document Binary Content
    */
   InputStream fetchContent(String contentUrlPath);
+
+  /**
+   * Sets the connect timeout (in ms)
+   * http://hc.apache.org/httpcomponents-client-4.2.x/tutorial/html/connmgmt.html
+   *
+   * @param connectTimeout the connection timeout (in ms)
+   */
+  void setConnectTimeout(int connectTimeout);
+
+  /**
+   * Sets the socket timeout (in ms)
+   * http://hc.apache.org/httpcomponents-client-4.2.x/tutorial/html/connmgmt.html
+   *
+   * @param socketTimeout the socket timeout (in ms)
+   */
+  void setSocketTimeout(int socketTimeout);
+
+  /**
+   * Sets the connection request timeout (in ms)
+   * http://hc.apache.org/httpcomponents-client-4.2.x/tutorial/html/connmgmt.html
+   *
+   * @param requestTimeout the connection request timeout (in ms)
+   */
+  void setRequestTimeout(int requestTimeout);
+
 }

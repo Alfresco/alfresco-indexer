@@ -40,6 +40,11 @@ public class AlfrescoIndexerIT {
         "workspace",
         "SpacesStore",
         "admin", "admin");
+
+    client.setConnectTimeout(20000);
+    client.setSocketTimeout(20000);
+    client.setRequestTimeout(20000);
+
     assertNotNull(client);
 
     //Fetching all Alfresco nodes that have (ever) changed, expecting 65 results

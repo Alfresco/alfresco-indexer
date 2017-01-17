@@ -69,6 +69,9 @@ public class AlfrescoClientTest {
   public void setup() {
     client = new WebScriptsAlfrescoClient("http", "localhost:8089", "/alfresco/service",
         STORE_PROTOCOL, STORE_ID);
+    client.setConnectTimeout(20000);
+    client.setSocketTimeout(20000);
+    client.setRequestTimeout(20000);
   }
 
   private void stubResult(String body) {
